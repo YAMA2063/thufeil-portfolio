@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muhammad Thufeil Putrayama, UI/UX, chatbot RAG, web</title>
+<meta name="description" content="Portofolio Muhammad Thufeil Putrayama: chatbot akademik berbasis RAG, UI/UX platform keuangan RT 02 di Figma, desain visual, dan konten video. Lulusan S1 Sistem Informasi Gunadarma, IPK 3,72.">
+<link rel="icon" href="./assets/avatar_hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<header class="bar">
+  <a href="#atas" class="who">Muhammad Thufeil Putrayama</a>
+  <nav><a href="#karya">Karya</a><a href="#latar">Latar</a><a href="#kontak">Kontak</a><a class="cv" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a></nav>
+</header>
+
+<main>
+<section class="hero" id="atas">
+  <canvas id="heat" aria-hidden="true"></canvas>
+  <h1><span class="first">Muhammad</span><span>Thufeil</span><span>Putrayama</span></h1>
+  <div class="photo"><figure class="portrait"><img src="./assets/avatar_hero.jpg" alt="Potret Muhammad Thufeil Putrayama" width="750" height="1080"></figure><span class="sticker">IPK 3,72<small>S1 Sistem Informasi</small></span></div>
+  <div class="hero-foot">
+    <p class="lede">Saya merancang antarmuka, membangun chatbot yang tidak mengarang jawaban, dan menyunting video. Lulusan S1 Sistem Informasi Universitas Gunadarma, IPK 3,72, bersertifikat BNSP Junior Web Programmer. Terbuka untuk magang dan posisi junior.</p>
+    <button class="detail gyrobtn" id="gyrobtn" hidden>Aktifkan gyro HP</button>
+  </div>
+  <p class="hint">Gerakkan kursor: nama terbakar heatmap, foto ikut miring seperti gyro. Di HP, tekan Aktifkan gyro lalu miringkan ponsel.</p>
+</section>
+
+<div class="band" aria-hidden="true"><div class="track"><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>Video Editing</span><span>Web Development</span><span>Design Thinking</span><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>Video Editing</span><span>Web Development</span><span>Design Thinking</span></div></div>
+
+<section id="karya" class="work">
+  <h2>Karya</h2>
+  <div class="filters" role="group" aria-label="Filter karya"><button aria-pressed="true" data-f="all">Semua</button><button aria-pressed="false" data-f="ai">AI dan chatbot</button><button aria-pressed="false" data-f="uiux">UI/UX dan web</button><button aria-pressed="false" data-f="konten">Konten dan visual</button></div>
+
+  <article data-cat="ai" data-id="rag" class="row">
+    <figure class="sheet shot">
+      <img src="./assets/chatbot_light_chat.png" alt="Demo percakapan chatbot RAG Gunadarma dengan sitasi dokumen resmi">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-img="./assets/chatbot_light_chat.png" data-alt="Demo percakapan chatbot RAG Gunadarma" data-cap="Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi fitur sematkan/hapus riwayat percakapan serta sitasi transparan dokumen kampus.">Percakapan RAG</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_light_beranda.png" data-alt="Tampilan beranda Asisten AI Gunadarma" data-cap="Antarmuka Beranda: Desain interaktif modern tema terang Gunadarma dengan tombol pintas pertanyaan akademik resmi.">Beranda AI</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_light_admin.png" data-alt="Dashboard manajemen dokumen dan sinkronisasi vektor admin" data-cap="Dashboard Admin: Manajemen 153 dokumen kampus, upload PDF dengan restrukturisasi otomatis, dan incremental indexing ChromaDB.">Dashboard Admin</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_uji_akurasi.png" data-alt="Hasil pengujian akurasi dan performa skripsi" data-cap="Pengujian Skripsi BAAK: Akurasi jawaban 86,67%, 90,00% bebas halusinasi, dan rata-rata respons 4,81 detik dari 30 skenario uji.">Uji Akurasi</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_uji_ablation.png" data-alt="Hasil evaluasi ablation study retrieval" data-cap="Ablation Study: Evaluasi kuantitatif 4 skenario membuktikan pencarian hybrid BM25 + Vektor mencapai Hit Rate@5 76,7% dan MRR 0,644.">Ablation Study</button>
+      </div>
+      <figcaption>Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi fitur sematkan/hapus riwayat percakapan serta sitasi transparan dokumen kampus.</figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Skripsi S1 Sistem Informasi, 2026</p>
+      <h3>Chatbot Informasi Akademik BAAK dengan Hybrid RAG</h3>
+      <p>Asisten AI cerdas berbasis Retrieval-Augmented Generation (RAG) untuk layanan informasi BAAK Universitas Gunadarma. Menggabungkan pencarian leksikal BM25 Okapi dan Dense Vector Embedding (multilingual-e5-base) menggunakan Reciprocal Rank Fusion (RRF), dilengkapi Query Transformation otomatis (Groq LLaMA 3.3 70B &amp; Google Gemini), transparansi sitasi dokumen resmi kampus, serta panel admin manajemen dokumen.</p>
+      <p class="res">Hasil Pengujian &amp; Evaluasi Ilmiah: Akurasi jawaban 86,67% dan 90,00% bebas halusinasi pada 30 skenario uji BAAK (respons 4,81 detik). Pada evaluasi retrieval hybrid, Hit Rate@5 mencapai 76,7% (+13,4 pt) dan MRR 0,644 dengan latensi pencarian 175 ms.</p>
+      <p class="meta">FastAPI, ChromaDB, BM25 Okapi, HuggingFace E5, Groq LLaMA 3.3, Google Gemini, JWT, Bcrypt, SlowAPI</p><button class="detail" data-p="rag">Lihat detail</button>
+    </div>
+  </article>
+
+  <article data-cat="uiux" data-id="rt" class="row flip">
+    <figure class="sheet shot">
+      <img id="fimg" src="./assets/figma_rt02_dashboard.png" alt="Dashboard Warga platform iuran kas RT 02 di Figma">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-img="./assets/figma_rt02_dashboard.png" data-alt="Dashboard Warga platform iuran kas RT 02 di Figma" data-cap="Dashboard Warga: informasi tagihan tertunda, riwayat pembayaran terbaru, grafik tren kas bulanan, dan diagram alokasi dana RT.">Warga</button>
+        <button role="tab" aria-selected="false" data-img="./assets/figma_rt02_admin.png" data-alt="Dashboard Admin platform iuran kas RT 02 di Figma" data-cap="Dashboard Admin: kontrol kas RT, aksi cepat tambah warga & buat tagihan, serta verifikasi konfirmasi pembayaran warga.">Admin</button>
+        <button role="tab" aria-selected="false" data-img="./assets/figma_rt02_pembayaran.png" data-alt="Alur pembayaran iuran dengan pilihan QRIS dan transfer bank" data-cap="Alur Pembayaran: pilihan jenis iuran (Bulanan, Kebersihan, Keamanan, THR), rincian tagihan, dan scan barcode QRIS instan.">Pembayaran QRIS</button>
+        <button role="tab" aria-selected="false" data-img="./assets/figma_rt02_laporan.png" data-alt="Halaman laporan keuangan dan transparansi kas RT 02" data-cap="Laporan Keuangan: transparansi total pemasukan, pengeluaran, saldo kas akhir, serta grafik dan rincian arus kas.">Laporan Kas</button>
+        <button role="tab" aria-selected="false" data-img="./assets/figma_rt02_riwayat.png" data-alt="Halaman riwayat transaksi dan pembayaran iuran warga" data-cap="Riwayat Transaksi: tracking status pembayaran (dikonfirmasi/menunggu), rincian transfer/QRIS, serta tombol unduh bukti bayar.">Riwayat</button>
+      </div>
+      <figcaption id="fcap">Dashboard Warga: informasi tagihan tertunda, riwayat pembayaran terbaru, grafik tren kas bulanan, dan diagram alokasi dana RT.</figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Penulisan Ilmiah</p>
+      <h3>Platform iuran dan kas RT 02 di Figma</h3>
+      <p>Website untuk membayar iuran warga dan melihat laporan kas. Dirancang lewat lima tahap Design Thinking, dari empati sampai uji, dengan prototipe high-fidelity di Figma.</p>
+      <p class="res">Diuji di Maze bersama 17 warga dan pengurus: tingkat penyelesaian tugas 100%.</p>
+      <p class="meta">Figma, Design Thinking, Maze</p><button class="detail" data-p="rt">Lihat detail</button><a class="link" href="https://www.figma.com/design/MJfDGNE7hkUOc93Ey9SGgQ/FILE-ASLI--2-?node-id=0-1&p=f&t=LynvMIPhusCoYndW-0" target="_blank" rel="noopener">Buka di Figma ↗</a>
+    </div>
+  </article>
+
+  <article data-cat="uiux" data-id="brandedym" class="row">
+    <figure class="sheet shot">
+      <img src="./assets/brandedym_real_dashboard.png" alt="Dashboard sistem persediaan BrandedYM dengan grafik stok dan tabel mutasi">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-img="./assets/brandedym_real_dashboard.png" data-alt="Dashboard sistem persediaan BrandedYM" data-cap="Dashboard analitik persediaan: KPI metrik stok riil, grafik mutasi arus barang 6 bulan, dan monitoring stok minimum.">Dashboard</button>
+        <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_barang.png" data-alt="Master data pakaian dan barang BrandedYM" data-cap="Master Data Barang: tabel kode SKU, kategori pakaian, satuan, peringatan batas minimum stok, serta tombol aksi CRUD.">Master Barang</button>
+        <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_persediaan.png" data-alt="Pencatatan mutasi persediaan masuk dan keluar" data-cap="Transaksi Persediaan: kontrol mutasi stok masuk (supplier) dan keluar (penjualan) dengan status ketersediaan.">Transaksi Stok</button>
+        <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_laporan.png" data-alt="Halaman laporan dengan filter tanggal dan ekspor Excel PDF" data-cap="Laporan & Ekspor: filter rentang tanggal dan tipe transaksi, dilengkapi tombol ekspor instan ke Excel dan PDF.">Laporan PDF/Excel</button>
+      </div>
+      <figcaption>Dashboard analitik persediaan: KPI metrik stok riil, grafik mutasi arus barang 6 bulan, dan monitoring stok minimum.</figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Aplikasi Web Fullstack</p>
+      <h3>BrandedYM — Sistem Persediaan Toko Pakaian</h3>
+      <p>Sistem manajemen persediaan dan rantai pasok pakaian terintegrasi. Menangani pencatatan mutasi stok masuk (supplier) dan keluar (penjualan), monitoring stok menipis otomatis (safety stock alert), serta pembuatan laporan akuntabel siap cetak.</p>
+      <p class="res">Dilengkapi kartu stok otomatis, visualisasi arus barang interaktif Chart.js, manajemen hak akses (Admin dan Staff), serta ekspor laporan PDF dan Excel.</p>
+      <p class="meta">Laravel 11, PHP 8.4, MySQL, Blade Engine, Bootstrap 5 (Dark Glassmorphism), Chart.js</p><button class="detail" data-p="brandedym">Lihat detail</button>
+    </div>
+  </article>
+
+  <article data-cat="konten" data-id="fmvp" class="row">
+    <figure class="sheet poster"><img src="./assets/fmvp_poster.png" alt="Poster FMVP 2026 PMPL ID Spring Final untuk BOOM Esports"></figure>
+    <div class="txt">
+      <p class="kind">PUBG Mobile Design Challenge Season 2</p>
+      <h3>Poster FMVP untuk BOOM Esports</h3>
+      <p>Poster perayaan Final MVP 2026 PMPL ID Spring. Subjek pemain disusun berlapis dengan latar hutan malam dan mobil, diberi grading ungu, merah tua, dan emas, lalu statistik pertandingan ditata sebagai tipografi.</p>
+      <p class="meta">Canva, komposisi visual, color grading</p><button class="detail" data-p="fmvp">Lihat detail</button>
+    </div>
+  </article>
+
+  <article data-cat="konten" data-id="content" class="row flip">
+    <figure class="sheet"><img src="./assets/content_creation_thumb.jpg" alt="Cuplikan produksi konten video"></figure>
+    <div class="txt">
+      <p class="kind">Freelance sejak Agustus 2022</p>
+      <h3>Konten video analisis dan edukasi</h3>
+      <p>Saya meriset topik, menulis naskah, menyusun alur cerita, lalu menyunting gambar dan suara. Narasi dan musik latar diseimbangkan, thumbnail dibuat sendiri.</p>
+      <p class="meta">CapCut, Kinemaster, Canva</p><button class="detail" data-p="content">Lihat detail</button>
+    </div>
+  </article>
+
+  <p class="more" data-cat="ai">Proyek lain: <strong>Multi-Agent Office</strong>, simulasi rapat eksekutif oleh empat agen LLM (CEO, CTO, Analyst, Secretary) dengan memori SQLite dan keputusan lewat konsensus. Dibangun dengan Python dan FastAPI. <button class="detail" data-p="office">Lihat detail</button></p>
+</section>
+
+<section id="latar" class="bg">
+  <h2>Latar</h2>
+  <dl>
+    <div><dt>2026</dt><dd><strong>Junior Web Programmer, BNSP</strong>Dinyatakan kompeten oleh Badan Nasional Sertifikasi Profesi.</dd></div>
+    <div><dt>2022 sampai 2026</dt><dd><strong>S1 Sistem Informasi, Universitas Gunadarma</strong>IPK 3,72 dari 4,00. Pelatihan Basic Web App Design (2025), Basic Web App Development (2026).</dd></div>
+    <div><dt>2019 sampai 2022</dt><dd><strong>MIPA, SMA KORPRI Bekasi</strong>Rata-rata nilai ujian 91,63.</dd></div>
+  </dl>
+</section>
+
+<section id="kontak" class="contact">
+  <h2>Mari bicara</h2>
+  <p>Tersedia untuk Maganghub dan Siapkerja, posisi junior web developer, UI/UX designer, atau content creator. Domisili Babelan, Bekasi; terbuka untuk Jabodetabek dan remote.</p>
+  <a class="mail" href="mailto:putrayama63@gmail.com">putrayama63@gmail.com</a>
+  <p class="alt"><a href="https://wa.me/6281514713206" target="_blank" rel="noopener">WhatsApp +62 815-1471-3206</a> <a href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV (PDF)</a></p>
+</section>
+</main>
+<footer>© 2026 Muhammad Thufeil Putrayama</footer>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau gambar layar penuh" hidden>
+  <button class="lightbox-close" id="lbClose" aria-label="Tutup pratinjau">×</button>
+  <div class="lightbox-content">
+    <img id="lbImg" src="" alt="Pratinjau gambar">
+    <p id="lbCap" class="lightbox-cap"></p>
+  </div>
+</div>
+<dialog id="dlg" aria-labelledby="dt"><button class="x" id="dx" aria-label="Tutup">×</button><div id="dbody"></div></dialog>
+<script src="./app.js"></script>
+<script src="./chatbot.js"></script>
+</body>
+</html>
