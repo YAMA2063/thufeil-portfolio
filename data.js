@@ -60,13 +60,13 @@ window.CERTS=[
 /* ===== VIDEO =====
    Satu blok = satu channel, dan tiap channel tampil sebagai bab sendiri (urutan pertama = GeoLogika, kedua = Lemminoid). */
 window.VIDEOS=[
- {channel:'GeoLogika',kind:'Video dokumenter sains dan geologi',desc:'Seluruh produksinya memakai alur kerja AI agent: riset mendalam, naskah geologi presisi, kinetic typography, dan sinkronisasi audio-visual zero-gap.',url:'',thumb:'./assets/geologika/geologika_jembatan_bali.jpg',videos:[
-  {title:'Kenapa Tidak Ada Jembatan Selat Bali?',thumb:'./assets/geologika/geologika_jembatan_bali.jpg',desc:'Investigasi geologi tektonik busur Sunda dan aspek sosio-kultural di balik ketiadaan jembatan penghubung Jawa dan Bali.'},
-  {title:'Mengalir Tiap Hari Kenapa Tak Habis?',thumb:'./assets/geologika/geologika_air_gunung.jpg',desc:'Misteri siklus hidrogeologi akuifer vulkanik pegunungan Indonesia yang tak pernah kering.'}
+ {channel:'GeoLogika',kind:'Video dokumenter sains dan geologi',desc:'Seluruh produksinya memakai alur kerja AI agent: riset mendalam, naskah geologi presisi, kinetic typography, dan sinkronisasi audio-visual zero-gap.',url:'https://www.youtube.com/@GeoLogika',thumb:'./assets/geologika/geologika_jembatan_bali.jpg',videos:[
+  {title:'Kenapa Tidak Ada Jembatan Selat Bali?',thumb:'./assets/geologika/geologika_jembatan_bali.jpg',src:'./assets/geologika/geologika_jembatan_bali.mp4',url:'https://www.youtube.com/@GeoLogika',desc:'Investigasi geologi tektonik busur Sunda dan aspek sosio-kultural di balik ketiadaan jembatan penghubung Jawa dan Bali.'},
+  {title:'Mengalir Tiap Hari Kenapa Tak Habis?',thumb:'./assets/geologika/geologika_air_gunung.jpg',src:'./assets/geologika/geologika_air_gunung.mp4',url:'https://www.youtube.com/@GeoLogika',desc:'Misteri siklus hidrogeologi akuifer vulkanik pegunungan Indonesia yang tak pernah kering.'}
  ]},
- {channel:'Lemminoid',kind:'Footage nyata dan animasi 2D berbasis kode',desc:'Channel dokumenter investigatif yang memadukan footage arsip nyata dengan animasi 2D berbasis kode Remotion. Menerapkan standar broadcast lower-third, provenance footnote, serta visualisasi data geospasial presisi.',url:'',thumb:'./assets/lemminoid/lemminoid_perang_nikel_thumb.jpg',videos:[
-  {title:'Perang Nikel Dunia: Indonesia 62% Nikel Dunia Terancam?',thumb:'./assets/lemminoid/lemminoid_perang_nikel_thumb.jpg',desc:'Investigasi geopolitik hilirisasi nikel Indonesia, dinamika perang harga nikel global, dan rantai pasok baterai EV dunia.'},
-  {title:'Ke Mana Sebenarnya Perginya Sampah Kita?',thumb:'./assets/lemminoid/lemminoid_sampah_thumb.jpg',desc:'Penelusuran investigatif alur rantai limbah, pemilahan material, dan realitas daur ulang plastik perkotaan.'}
+ {channel:'Lemminoid',kind:'Footage nyata dan animasi 2D berbasis kode',desc:'Channel dokumenter investigatif yang memadukan footage arsip nyata dengan animasi 2D berbasis kode Remotion. Menerapkan standar broadcast lower-third, provenance footnote, serta visualisasi data geospasial presisi.',url:'https://www.youtube.com/@Lemminoid',thumb:'./assets/lemminoid/lemminoid_perang_nikel_thumb.jpg',videos:[
+  {title:'Perang Nikel Dunia: Indonesia 62% Nikel Dunia Terancam?',thumb:'./assets/lemminoid/lemminoid_perang_nikel_thumb.jpg',src:'./assets/lemminoid/lemminoid_perang_nikel.mp4',url:'https://www.youtube.com/@Lemminoid',desc:'Investigasi geopolitik hilirisasi nikel Indonesia, dinamika perang harga nikel global, dan rantai pasok baterai EV dunia.'},
+  {title:'Ke Mana Sebenarnya Perginya Sampah Kita?',thumb:'./assets/lemminoid/lemminoid_sampah_thumb.jpg',src:'./assets/lemminoid/lemminoid_sampah.mp4',url:'https://www.youtube.com/@Lemminoid',desc:'Penelusuran investigatif alur rantai limbah, pemilahan material, dan realitas daur ulang plastik perkotaan.'}
  ]}
 ];
 

@@ -32,10 +32,17 @@ var VD=window.VIDEOS||[];
  var c=VD[+root.dataset.ch];if(!c)return;
  var vs=root.querySelector('.vstage'),vl=root.querySelector('.vlist'),vcp=root.querySelector('figcaption'),vj=0;
  function badge(){return el('span','vbadge','Dibuat dengan AI agent')}
- function play(){var v=(c.videos||[])[vj];if(!v||!v.id)return;var f=el('iframe');
-  f.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+'?autoplay=1&rel=0';f.title=v.title||'Video';
-  f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;vs.textContent='';vs.appendChild(f);vs.appendChild(badge())}
- function draw(){var v=(c.videos||[])[vj],has=!!(v&&v.id);vs.textContent='';
+ function play(){var v=(c.videos||[])[vj];if(!v)return;vs.textContent='';
+  if(v.id){
+   var f=el('iframe');f.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+'?autoplay=1&rel=0';
+   f.title=v.title||'Video';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;
+   vs.appendChild(f);
+  }else if(v.src||v.video||v.file){
+   var vid=el('video');vid.src=v.src||v.video||v.file;vid.controls=true;vid.autoplay=true;
+   vid.playsInline=true;vid.setAttribute('playsinline','');vs.appendChild(vid);vid.play().catch(function(){});
+  }
+  vs.appendChild(badge())}
+ function draw(){var v=(c.videos||[])[vj],has=!!(v&&(v.id||v.src||v.video||v.file));vs.textContent='';
   var src=(v&&(v.thumb||(v.id&&'https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg')))||c.thumb;
   var host=has?mk('button','vplay','',play):el('div','vstill');
   if(has)host.setAttribute('aria-label','Putar video '+(v.title||c.channel));
@@ -46,12 +53,11 @@ var VD=window.VIDEOS||[];
   vl.textContent='';vl.hidden=(c.videos||[]).length<2;
   (c.videos||[]).forEach(function(x,k){var b=mk('button','',x.title,function(){vj=k;draw()});b.setAttribute('aria-pressed',k===vj);vl.appendChild(b)});
   vcp.textContent='';var curTitle=(v&&v.title)||c.channel;vcp.appendChild(el('strong','',curTitle));
-  var txt=[has?'Channel '+c.channel:'',(v&&v.desc)||c.desc].filter(Boolean).join('. ');if(txt)vcp.appendChild(el('span','',txt));
+  var txt=[(v&&v.desc)||c.desc].filter(Boolean).join('. ');if(txt)vcp.appendChild(el('span','',txt));
   var lk=el('span','vlinks');
-  function a(t,u){var e=el('a','link',t);e.href=u;e.target='_blank';e.rel='noopener';lk.appendChild(e)}
-  if(has)a('Buka di YouTube ↗',v.url||'https://www.youtube.com/watch?v='+encodeURIComponent(v.id));
-  else if(v&&v.url)a('Lihat video ↗',v.url);
-  if(c.url)a('Kunjungi channel '+c.channel+' ↗',c.url);
+  function a(t,u,cls){var e=el('a','link '+(cls||''),t);e.href=u;e.target='_blank';e.rel='noopener';lk.appendChild(e)}
+  if(c.url)a('Kunjungi Channel YouTube @'+c.channel+' ↗',c.url,'yt-chan');
+  else if(v&&v.url)a('Lihat di YouTube ↗',v.url);
   if(lk.children.length)vcp.appendChild(lk)}
  draw()});
 // ===== Sertifikat =====
