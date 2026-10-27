@@ -364,3 +364,26 @@ h1{font-size:clamp(3rem,10vw,9.2rem)}
 /* ===== putaran 6: dua bab video ===== */
 [data-id=geologika]{--bg:var(--sun);--fg:var(--ink);--acc:var(--ink);--mu:#4a3f00;--hot:var(--heat);--kc:var(--ink)}
 [data-id=lemminoid]{--bg:#0d3a3a;--fg:#e8fffa;--acc:var(--sun);--mu:#9fd8cf;--hot:var(--sun);--kc:#7ff0d4}
+
+/* ===== putaran 7: pop up video modal player ===== */
+.vplay-cue{position:absolute;bottom:.8rem;right:.8rem;z-index:2;padding:.35rem .85rem;background:rgba(11,18,32,.88);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:99px;font:700 .82rem var(--d);letter-spacing:.02em;backdrop-filter:blur(6px);pointer-events:none;transition:background .2s,color .2s,transform .2s}
+.vplay:hover .vplay-cue{background:var(--heat);color:#fff;border-color:var(--heat);transform:scale(1.05)}
+.vpop-trigger{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;background:var(--heat);color:#fff;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);border-radius:99px;font:700 .88rem var(--d);cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s}
+.vpop-trigger:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);background:#ff1a53}
+
+dialog.vpop{width:min(60rem,calc(100vw - 2rem));max-height:92vh;padding:1.25rem;background:var(--ink);color:#fff;border:3px solid var(--sky);border-radius:4px;box-shadow:12px 12px 0 var(--sun);overflow-y:auto;margin:auto}
+dialog.vpop::backdrop{background:rgba(10,22,48,.88);backdrop-filter:blur(8px)}
+.vpop .x{position:absolute;top:.7rem;right:.8rem;width:2.2rem;height:2.2rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:1.4rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:3px;transition:all .15s ease;z-index:10}
+.vpop .x:hover{background:var(--heat);color:#fff;transform:scale(1.08)}
+.vpop-stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid rgba(255,255,255,.2);margin-top:.6rem;border-radius:2px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.vpop-stage iframe,.vpop-stage video{width:100%;height:100%;border:0;display:block}
+.vpop-info{margin-top:1rem;display:grid;gap:.5rem}
+.vpop-tag{justify-self:start;font:700 .78rem var(--d);letter-spacing:.04em;padding:.25rem .65rem;background:var(--sun);color:var(--ink);border-radius:2px}
+.vpop-title{font:700 clamp(1.1rem,2.5vw,1.35rem)/1.3 var(--d);color:#fff;margin:0}
+.vpop-desc{font:400 .95rem/1.55 var(--b);color:#cad5e8;margin:0}
+.vpop-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:.5rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.15)}
+.vpop-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;font:700 .88rem var(--d);text-decoration:none;border-radius:2px;transition:transform .12s,box-shadow .12s}
+.vpop-btn.yt-watch{background:#ff0000;color:#fff;border:2px solid #ff0000;box-shadow:3px 3px 0 #000}
+.vpop-btn.yt-channel{background:#fff;color:var(--ink);border:2px solid #000;box-shadow:3px 3px 0 #000}
+.vpop-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000}
+

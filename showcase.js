@@ -28,35 +28,90 @@ if(tabs&&stage&&P.length){
 }
 // ===== Video: tiap bab .vsheet memakai satu channel dari data.js (data-ch = urutan) =====
 var VD=window.VIDEOS||[];
+var vpop=null,vpopStage=null,vpopTitle=null,vpopTag=null,vpopDesc=null,vpopActions=null;
+function initVideoPop(){
+ if(vpop)return;
+ vpop=el('dialog','cview vpop');
+ var x=mk('button','x','×',function(){vpop.close()});
+ x.setAttribute('aria-label','Tutup');
+ vpopStage=el('div','vpop-stage');
+ var info=el('div','vpop-info');
+ vpopTag=el('span','vpop-tag');
+ vpopTitle=el('h3','vpop-title');
+ vpopDesc=el('p','vpop-desc');
+ vpopActions=el('div','vpop-actions');
+ [vpopTag,vpopTitle,vpopDesc,vpopActions].forEach(function(n){info.appendChild(n)});
+ [x,vpopStage,info].forEach(function(n){vpop.appendChild(n)});
+ document.body.appendChild(vpop);
+ vpop.addEventListener('click',function(e){if(e.target===vpop)vpop.close()});
+ vpop.addEventListener('close',function(){
+  vpopStage.textContent='';
+  if(window.sfxBeep)window.sfxBeep(420,.05);
+ });
+}
+function openVideoPop(v,c){
+ initVideoPop();
+ vpopStage.textContent='';
+ if(v.id){
+  var f=el('iframe');
+  f.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+'?autoplay=1&rel=0&modestbranding=1&enablejsapi=1';
+  f.title=v.title||'Video YouTube';
+  f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+  f.allowFullscreen=true;
+  vpopStage.appendChild(f);
+ }else if(v.src||v.video||v.file){
+  var vid=el('video');
+  vid.src=v.src||v.video||v.file;
+  vid.controls=true;
+  vid.autoplay=true;
+  vid.playsInline=true;
+  vid.setAttribute('playsinline','');
+  vpopStage.appendChild(vid);
+  vid.play().catch(function(){});
+ }
+ vpopTag.textContent=(c.handle||('@'+c.channel))+' • '+(c.kind||'Video Dokumenter');
+ vpopTitle.textContent=v.title||c.channel;
+ vpopDesc.textContent=v.desc||c.desc||'';
+ vpopActions.textContent='';
+ var u=v.url||(v.id?'https://www.youtube.com/watch?v='+v.id:c.url);
+ if(u){
+  var ab=el('a','vpop-btn yt-watch','Tonton di YouTube ↗');
+  ab.href=u;ab.target='_blank';ab.rel='noopener';
+  vpopActions.appendChild(ab);
+ }
+ if(c.url){
+  var ac=el('a','vpop-btn yt-channel','Channel '+(c.handle||('@'+c.channel))+' ↗');
+  ac.href=c.url;ac.target='_blank';ac.rel='noopener';
+  vpopActions.appendChild(ac);
+ }
+ vpop.showModal();
+ if(window.sfxBeep)window.sfxBeep(750,.05);
+}
+
 [].forEach.call(document.querySelectorAll('.vsheet'),function(root){
  var c=VD[+root.dataset.ch];if(!c)return;
  var vs=root.querySelector('.vstage'),vl=root.querySelector('.vlist'),vcp=root.querySelector('figcaption'),vj=0;
  function badge(){return el('span','vbadge','Dibuat dengan AI agent')}
- function play(){var v=(c.videos||[])[vj];if(!v)return;vs.textContent='';
-  if(v.id){
-   var f=el('iframe');f.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+'?autoplay=1&rel=0';
-   f.title=v.title||'Video';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;
-   vs.appendChild(f);
-  }else if(v.src||v.video||v.file){
-   var vid=el('video');vid.src=v.src||v.video||v.file;vid.controls=true;vid.autoplay=true;
-   vid.playsInline=true;vid.setAttribute('playsinline','');vs.appendChild(vid);vid.play().catch(function(){});
-  }
-  vs.appendChild(badge())}
+ function play(){var v=(c.videos||[])[vj];if(!v)return;openVideoPop(v,c)}
  function draw(){var v=(c.videos||[])[vj],has=!!(v&&(v.id||v.src||v.video||v.file));vs.textContent='';
-  var src=(v&&(v.thumb||(v.id&&'https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg')))||c.thumb;
+  var src=(v&&(v.thumb||(v.id&&'https://i.ytimg.com/vi/'+v.id+'/maxresdefault.jpg')))||c.thumb;
   var host=has?mk('button','vplay','',play):el('div','vstill');
   if(has)host.setAttribute('aria-label','Putar video '+(v.title||c.channel));
   else if(src)host.addEventListener('click',function(){if(window.openLightbox)window.openLightbox(src,(v&&v.title?v.title+', ':'')+'channel '+c.channel,(v&&v.title?v.title+': ':'')+((v&&v.desc)||c.desc||''))});
   var card=el('div','vcard');card.appendChild(el('strong','',c.channel));card.appendChild(el('span','',c.kind||''));host.appendChild(card);
   if(src){var im=el('img');im.src=src;im.alt=(v&&v.title?v.title+', ':'')+'channel '+c.channel;im.onerror=function(){im.remove()};host.appendChild(im)}
+  var cue=el('span','vplay-cue','▶ Putar video (Pop Up)');
+  host.appendChild(cue);
   vs.appendChild(host);vs.appendChild(badge());
   vl.textContent='';vl.hidden=(c.videos||[]).length<2;
   (c.videos||[]).forEach(function(x,k){var b=mk('button','',x.title,function(){vj=k;draw()});b.setAttribute('aria-pressed',k===vj);vl.appendChild(b)});
   vcp.textContent='';var curTitle=(v&&v.title)||c.channel;vcp.appendChild(el('strong','',curTitle));
   var txt=[(v&&v.desc)||c.desc].filter(Boolean).join('. ');if(txt)vcp.appendChild(el('span','',txt));
   var lk=el('span','vlinks');
+  var pbtn=mk('button','vpop-trigger','▶ Putar Video (Pop Up)',play);
+  lk.appendChild(pbtn);
   function a(t,u,cls){var e=el('a','link '+(cls||''),t);e.href=u;e.target='_blank';e.rel='noopener';lk.appendChild(e)}
-  if(c.url)a('Kunjungi Channel YouTube @'+c.channel+' ↗',c.url,'yt-chan');
+  if(c.url)a('Kunjungi Channel YouTube '+(c.handle||('@'+c.channel))+' ↗',c.url,'yt-chan');
   else if(v&&v.url)a('Lihat di YouTube ↗',v.url);
   if(lk.children.length)vcp.appendChild(lk)}
  draw()});
