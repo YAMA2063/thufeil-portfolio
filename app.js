@@ -39,23 +39,31 @@ document.addEventListener('click',function(e){if(e.target.closest('a,button'))be
 // Glow kursor
 var glow=document.getElementById('glow');
 if(fine&&!reduce){addEventListener('pointermove',function(e){glow.style.opacity=1;glow.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)'});document.addEventListener('mouseleave',function(){glow.style.opacity=0})}
-// Tilt (mouse) + gyroscope (HP)
-var T=[].slice.call(document.querySelectorAll('.sheet'));T.forEach(function(t){t.classList.add('tilt')});
+// Tilt + gyro (bisa dinyalakan dan dimatikan lewat tombol)
+var T=[].slice.call(document.querySelectorAll('.sheet:not(.vsheet)'));T.forEach(function(t){t.classList.add('tilt')});
 var hero=document.getElementById('atas'),photo=hero.querySelector('.photo'),h1=hero.querySelector('h1');
+var gyroOn=fine&&!reduce,gb=document.getElementById('gyrobtn'),sensor=false;
+function clamp(v){return Math.max(-1,Math.min(1,v))}
 function par(mx,my){photo.style.transform='perspective(1000px) rotateY('+mx*16+'deg) rotateX('+(-my*12)+'deg)';h1.style.transform='translate('+(-mx*18)+'px,'+(-my*10)+'px)'}
-if(fine&&!reduce){hero.addEventListener('pointermove',function(e){var r=hero.getBoundingClientRect();par(((e.clientX-r.left)/r.width-.5)*2,((e.clientY-r.top)/r.height-.5)*2)});hero.addEventListener('pointerleave',function(){par(0,0)})}
 function tilt(t,rx,ry){t.style.transform='perspective(900px) rotateX('+rx+'deg) rotateY('+ry+'deg)'}
-if(!reduce){
+function rest(){par(0,0);T.forEach(function(t){t.style.transform=''})}
+function label(){if(!gb)return;gb.setAttribute('aria-pressed',gyroOn);gb.textContent='Gyro: '+(gyroOn?'nyala':'mati')}
+function onOrient(e){if(!gyroOn||e.gamma==null)return;var mx=clamp(e.gamma/25),my=clamp(((e.beta||0)-45)/25);par(mx,my);
+ T.forEach(function(t){var r=t.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)tilt(t,-my*8,mx*8)})}
+function enable(){
+ if(fine){gyroOn=true;label();return}
+ if(!window.DeviceOrientationEvent){gb.textContent='Gyro tidak didukung perangkat ini';gb.disabled=true;return}
+ function go(){gyroOn=true;if(!sensor){addEventListener('deviceorientation',onOrient);sensor=true}label()}
+ if(typeof DeviceOrientationEvent.requestPermission==='function')DeviceOrientationEvent.requestPermission().then(function(s){if(s==='granted')go();else gb.textContent='Izin gyro ditolak'}).catch(function(){gb.textContent='Gyro tidak tersedia'});
+ else go()}
+function disable(){gyroOn=false;rest();label()}
+if(gb){if(reduce)gb.hidden=true;else{gb.hidden=false;label();gb.addEventListener('click',function(){gyroOn?disable():enable()})}}
+if(fine&&!reduce){
+ hero.addEventListener('pointermove',function(e){if(!gyroOn)return;var r=hero.getBoundingClientRect();par(((e.clientX-r.left)/r.width-.5)*2,((e.clientY-r.top)/r.height-.5)*2)});
+ hero.addEventListener('pointerleave',function(){par(0,0)});
  T.forEach(function(t){
-  t.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var r=t.getBoundingClientRect();tilt(t,((e.clientY-r.top)/r.height-.5)*-8,((e.clientX-r.left)/r.width-.5)*8)});
-  t.addEventListener('pointerleave',function(){t.style.transform=''})});
- var gy=false;function gyro(e){if(e.gamma==null)return;var ry=Math.max(-8,Math.min(8,e.gamma/4)),rx=Math.max(-8,Math.min(8,((e.beta||0)-45)/-5));
-  par(Math.max(-1,Math.min(1,e.gamma/25)),Math.max(-1,Math.min(1,((e.beta||0)-45)/25)));T.forEach(function(t){var r=t.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)tilt(t,rx,ry)})}
- function startGyro(){if(gy||!window.DeviceOrientationEvent)return;gy=true;
-  if(typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(function(s){if(s==='granted')addEventListener('deviceorientation',gyro)}).catch(function(){})}
-  else addEventListener('deviceorientation',gyro)}
- if(!fine){addEventListener('touchend',startGyro,{once:true});var gb=document.getElementById('gyrobtn');if(gb&&window.DeviceOrientationEvent){gb.hidden=false;gb.addEventListener('click',function(){startGyro();gb.textContent='Gyro aktif, miringkan HP'})}}
-}
+  t.addEventListener('pointermove',function(e){if(!gyroOn||e.pointerType!=='mouse')return;var r=t.getBoundingClientRect();tilt(t,((e.clientY-r.top)/r.height-.5)*-8,((e.clientX-r.left)/r.width-.5)*8)});
+  t.addEventListener('pointerleave',function(){t.style.transform=''})})}
 // Filter
 var fb=document.querySelectorAll('.filters button'),items=document.querySelectorAll('[data-cat]');
 fb.forEach(function(b){b.addEventListener('click',function(){fb.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
@@ -66,11 +74,11 @@ rag:{k:'Skripsi S1 Sistem Informasi, 2026 — AI Engineering & Fullstack RAG',t:
 rt:{k:'Penulisan Ilmiah, UI/UX dan web',t:'Platform iuran dan kas RT 02 di Figma',s:'Perancangan UI/UX website tata kelola iuran warga dan laporan kas yang transparan. Dilengkapi portal Warga dan Admin RT, alur pembayaran QRIS, transparansi arus kas, dan riwayat transaksi. Prototipe high-fidelity di Figma (FILE ASLI - 2), diuji lewat Maze.',m:[['Penyelesaian tugas','100%'],['Partisipan','17 warga dan pengurus'],['Metode','Design Thinking, 5 tahap']],h:['Empathize, Define, Ideate, Prototype, Test, membagi antarmuka menjadi mode Warga dan Admin RT.','Dashboard Admin memuat kontrol kas, aksi cepat tambah warga & buat tagihan, serta verifikasi konfirmasi pembayaran warga.','Uji Maze pada alur navigasi beranda, verifikasi kas masuk, dan pembayaran iuran QRIS.'],x:'Figma, Design Thinking, Maze, Wireframing, Prototyping',link:'https://www.figma.com/design/MJfDGNE7hkUOc93Ey9SGgQ/FILE-ASLI--2-?node-id=0-1&p=f&t=LynvMIPhusCoYndW-0',linkText:'Buka prototipe di Figma ↗'},
 brandedym:{k:'Aplikasi Web Fullstack, Laravel 11 & MySQL',t:'BrandedYM — Sistem Informasi Persediaan Toko Pakaian',s:'Aplikasi web fullstack terintegrasi untuk manajemen inventaris dan rantai pasok toko pakaian. Menangani mutasi stok masuk dari supplier dan keluar untuk penjualan, monitoring batas minimum stok otomatis, hingga pencetakan laporan siap cetak (PDF dan Excel).',m:[['Framework','Laravel 11 / PHP 8.4'],['Monitoring','Safety Stock Alert'],['Laporan Cetak','Export PDF & Excel']],h:['Dashboard analitik dark mode dengan visualisasi Chart.js untuk tren arus barang masuk dan keluar selama 6 bulan.','Pencatatan mutasi persediaan otomatis (stok masuk dan keluar) yang memperbarui kartu stok secara real-time.','Manajemen master barang pakaian lengkap dengan kode SKU, kategori, harga modal/jual, dan batas minimum stok aman.','Fitur ekspor laporan persediaan ke format PDF siap cetak dan Microsoft Excel dengan filter tanggal dinamis.','Sistem keamanan dan kontrol hak akses pengguna terbagi dua peran: Administrator dan Staff/Pimpinan.'],x:'Laravel 11, PHP 8.4, MySQL, Blade Engine, Bootstrap 5 (Dark Glassmorphism), Chart.js, DomPDF, FastExcel'},
 fmvp:{k:'PUBG Mobile Design Challenge Season 2',t:'Poster FMVP untuk BOOM Esports',s:'Karya digital untuk perayaan Final MVP 2026 PMPL ID Spring, dengan komposisi dinamis, kontras cahaya, dan tipografi esports.',m:[['Ajang','PMDC Season 2'],['Subjek','BOOM Esports FMVP'],['Gaya','Dark fantasy sinematik']],h:['Subjek pemain digabung dengan latar hutan malam dan supercar secara berlapis.','Grading ungu gelap, merah tua, dan emas yang selaras.','Statistik pertandingan (damage, elims, knockouts) ditata sebagai tipografi.'],x:'Canva, komposisi visual, color grading, esports branding'},
-content:{k:'Freelance sejak Agustus 2022',t:'Konten video analisis dan edukasi',s:'Riset topik, penulisan naskah, penyusunan alur cerita, penyuntingan audio-visual, hingga thumbnail.',m:[['Pengalaman','3+ tahun'],['Editing','CapCut, Kinemaster'],['Visual','Canva']],h:['Fakta dikumpulkan dari sumber tepercaya agar narasi akurat.','Volume narasi dan musik latar diseimbangkan, transisi disinkronkan.','Thumbnail dibuat sendiri untuk menarik penonton.'],x:'CapCut, Kinemaster, Canva, audio mixing, storytelling'},
-office:{k:'Arsitektur multi-agent',t:'Multi-Agent Enterprise Office',s:'Simulasi rapat eksekutif: agen CEO, CTO, Analyst, dan Secretary berdiskusi, saling mengkritik, lalu mencapai konsensus sebelum hasilnya disimpan.',m:[['Agen','4 agen khusus'],['Memori','SQLite persisten'],['Keputusan','Voting round-robin']],h:['Setiap sesi dan jejak penalaran agen disimpan di boardroom_memory.db.','Agen dapat memanggil kalkulator, web search, dan skrip data.','Agen Analyst memeriksa konsistensi rencana sebelum disetujui.'],x:'Python, FastAPI, SQLite, orkestrasi LLM, prompt engineering'}};
+geologika:{k:'Video Dokumenter Sains & Geologi, Alur Kerja AI Agent',t:'GeoLogika',s:'Channel YouTube dokumenter investigatif sains dan geologi kebumian Nusantara. Seluruh produksinya dieksekusi dengan pipeline otomatisasi AI agent: riset literatur ilmiah, penulisan naskah edukatif, tata letak visual mixed media, kinetic typography tersinkronisasi, dan desain suara organik zero-gap.',m:[['Investigasi','Geologi & Sains Nusantara'],['Sinkronisasi','Faster-Whisper Zero-Gap'],['Alur Kerja','AI Agent Automation']],h:['Saya mengarahkan perumusan topik, struktur 8-bab narasi ilmiah, prompt engineering, dan verifikasi fakta geologi.','AI agent mengeksekusi ekstraksi beat fonemik audio, subtitle karaoke DP phoneme-alignment, dan animasi kinetic typography.','Episode unggulan: "Kenapa Tidak Ada Jembatan Selat Bali?" dan "Mengalir Tiap Hari Kenapa Tak Habis?".'],x:'Prompt engineering, AI agent automation, Faster-Whisper, Python, MoviePy/FFmpeg, Kinetic typography'},
+lemminoid:{k:'Dokumenter Investigatif & Animasi Remotion 2D Berbasis Kode',t:'Lemminoid',s:'Channel YouTube dokumenter investigatif mendalam yang memadukan footage arsip nyata dengan animasi 2D berbasis kode deterministik (React & Remotion). Menerapkan standar broadcast lower-third, provenance footnote, serta visualisasi data geospasial presisi.',m:[['Format','Investigasi & Analisis Geopolitik'],['Animasi','Remotion 2D (Code-driven)'],['Standar Visual','Broadcast Lower-Third & Provenance']],h:['Saya memimpin riset data rantai pasok global, narasi investigatif, arsitektur alur cerita, dan arahan visual motion.','AI agent mengompilasi kode animasi 2D berbasis TypeScript/React untuk menghasilkan grafik data dan peta geospasial akurat.','Episode unggulan: "Perang Nikel Dunia: Indonesia 62% Nikel Dunia Terancam?" dan "Ke Mana Sebenarnya Perginya Sampah Kita?".'],x:'React, Remotion 2D, TypeScript, Python, Prompt engineering, Broadcast motion design, FFmpeg'}};
 var dlg=document.getElementById('dlg'),body=document.getElementById('dbody');
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x)e.textContent=x;return e}
-document.addEventListener('click',function(e){var b=e.target.closest('.detail');if(!b)return;var d=D[b.dataset.p];body.textContent='';
+document.addEventListener('click',function(e){var b=e.target.closest('.detail[data-p]');if(!b)return;var d=D[b.dataset.p];body.textContent='';
  body.appendChild(el('p','kind',d.k));var h3=el('h3','',d.t);h3.id='dt';body.appendChild(h3);body.appendChild(el('p','',d.s));
  var mx=el('div','mx');d.m.forEach(function(m){var v=el('div');v.appendChild(el('b','',m[1]));v.appendChild(document.createTextNode(m[0]));mx.appendChild(v)});body.appendChild(mx);
  var ul=el('ul');d.h.forEach(function(x){ul.appendChild(el('li','',x))});body.appendChild(ul);
@@ -86,14 +94,19 @@ dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
   var lb=document.getElementById('lightbox');
   if(!lb)return;
   var lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),lbClose=document.getElementById('lbClose');
+  function setCap(t){if(!lbCap)return;lbCap.textContent='';if(!t){lbCap.style.display='none';return}
+    var i=t.indexOf(': '),a=(i>0&&i<=48)?t.slice(0,i):'',b=a?t.slice(i+2):t,s;b=b.charAt(0).toUpperCase()+b.slice(1);
+    if(a){s=document.createElement('span');s.className='cap-t';s.textContent=a;lbCap.appendChild(s)}
+    s=document.createElement('span');s.className='cap-d';s.textContent=b;lbCap.appendChild(s);lbCap.style.display='block'}
   function openLb(src,alt,cap){
     if(!src)return;
     lbImg.src=src;lbImg.alt=alt||'Pratinjau gambar';
-    if(lbCap){lbCap.textContent=cap||alt||'';lbCap.style.display=lbCap.textContent?'block':'none'}
+    setCap(cap||alt||'');
     lb.hidden=false;document.body.style.overflow='hidden';
     requestAnimationFrame(function(){lb.classList.add('open');if(lbClose)lbClose.focus()});
     if(window.sfxBeep)window.sfxBeep(750,.05);
   }
+  window.openLightbox=openLb;
   function closeLb(){
     lb.classList.remove('open');document.body.style.overflow='';
     setTimeout(function(){lb.hidden=true;lbImg.src=''},250);

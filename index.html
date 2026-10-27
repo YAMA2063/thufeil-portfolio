@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Muhammad Thufeil Putrayama, UI/UX, chatbot RAG, web</title>
-<meta name="description" content="Portofolio Muhammad Thufeil Putrayama: chatbot akademik berbasis RAG, UI/UX platform keuangan RT 02 di Figma, desain visual, dan konten video. Lulusan S1 Sistem Informasi Gunadarma, IPK 3,72.">
+<meta name="description" content="Portofolio Muhammad Thufeil Putrayama: chatbot akademik berbasis RAG, UI/UX platform keuangan RT 02 di Figma, desain visual, dan konten video yang dibuat dengan AI agent. Lulusan S1 Sistem Informasi Gunadarma, IPK 3,72.">
 <link rel="icon" href="./assets/avatar_hero.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +14,8 @@
 <body>
 <div class="glow" id="glow" aria-hidden="true"></div>
 <header class="bar">
-  <a href="#atas" class="who">Muhammad Thufeil Putrayama</a>
-  <nav><a href="#karya">Karya</a><a href="#latar">Latar</a><a href="#kontak">Kontak</a><a class="cv" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a></nav>
+  <a href="#atas" class="who">Portofolio</a>
+  <nav><a href="#karya">Karya</a><a href="#studio">Presentasi</a><a href="#latar">Latar</a><a href="#sertifikat">Sertifikat</a><a href="#kontak">Kontak</a><a class="cv" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a></nav>
 </header>
 
 <main>
@@ -24,13 +24,13 @@
   <h1><span class="first">Muhammad</span><span>Thufeil</span><span>Putrayama</span></h1>
   <div class="photo"><figure class="portrait"><img src="./assets/avatar_hero.jpg" alt="Potret Muhammad Thufeil Putrayama" width="750" height="1080"></figure><span class="sticker">IPK 3,72<small>S1 Sistem Informasi</small></span></div>
   <div class="hero-foot">
-    <p class="lede">Saya merancang antarmuka, membangun chatbot yang tidak mengarang jawaban, dan menyunting video. Lulusan S1 Sistem Informasi Universitas Gunadarma, IPK 3,72, bersertifikat BNSP Junior Web Programmer. Terbuka untuk magang dan posisi junior.</p>
-    <button class="detail gyrobtn" id="gyrobtn" hidden>Aktifkan gyro HP</button>
+    <p class="lede">Saya merancang antarmuka, membangun chatbot yang tidak mengarang jawaban, dan membuat video dengan AI agent. Lulusan S1 Sistem Informasi Universitas Gunadarma, IPK 3,72, bersertifikat BNSP Junior Web Programmer. Terbuka untuk magang dan posisi junior.</p>
+    <button class="detail gyrobtn" id="gyrobtn" aria-pressed="false" hidden>Gyro: mati</button>
   </div>
-  <p class="hint">Gerakkan kursor: nama terbakar heatmap, foto ikut miring seperti gyro. Di HP, tekan Aktifkan gyro lalu miringkan ponsel.</p>
+  <p class="hint">Gerakkan kursor: nama terbakar heatmap, foto ikut miring seperti gyro. Di HP, nyalakan tombol Gyro lalu miringkan ponsel.</p>
 </section>
 
-<div class="band" aria-hidden="true"><div class="track"><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>Video Editing</span><span>Web Development</span><span>Design Thinking</span><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>Video Editing</span><span>Web Development</span><span>Design Thinking</span></div></div>
+<div class="band" aria-hidden="true"><div class="track"><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>AI Agent</span><span>Web Development</span><span>Design Thinking</span><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>AI Agent</span><span>Web Development</span><span>Design Thinking</span></div></div>
 
 <section id="karya" class="work">
   <h2>Karya</h2>
@@ -108,26 +108,67 @@
     </div>
   </article>
 
-  <article data-cat="konten" data-id="content" class="row flip">
-    <figure class="sheet"><img src="./assets/content_creation_thumb.jpg" alt="Cuplikan produksi konten video"></figure>
+  <article data-cat="konten" data-id="geologika" class="row flip">
+    <figure class="sheet vsheet" data-ch="0">
+      <div class="vstage"></div>
+      <div class="vlist" hidden></div>
+      <figcaption></figcaption>
+    </figure>
     <div class="txt">
-      <p class="kind">Freelance sejak Agustus 2022</p>
-      <h3>Konten video analisis dan edukasi</h3>
-      <p>Saya meriset topik, menulis naskah, menyusun alur cerita, lalu menyunting gambar dan suara. Narasi dan musik latar diseimbangkan, thumbnail dibuat sendiri.</p>
-      <p class="meta">CapCut, Kinemaster, Canva</p><button class="detail" data-p="content">Lihat detail</button>
+      <p class="kind">Video dokumenter sains dan geologi, alur kerja AI agent</p>
+      <h3>GeoLogika</h3>
+      <p>Channel YouTube dokumenter investigatif sains & geologi kebumian Nusantara. Seluruh produksinya dibuat lewat alur kerja AI agent: riset naskah ilmiah, tata visual sinematik, kinetic typography, dan sinkronisasi audio-visual zero-gap.</p>
+      <ul class="flow">
+        <li><b>Saya</b> merumuskan riset, struktur bab naskah, prompt, dan verifikasi fakta ilmiah.</li>
+        <li><b>AI agent</b> mengeksekusi sinkronisasi audio Faster-Whisper, naskah, dan composite visual.</li>
+        <li><b>Hasil</b> video dokumenter YouTube berstandar siaran ilmiah yang konsisten.</li>
+      </ul>
+      <p class="meta">Prompt engineering, AI agent automation, Faster-Whisper, video dokumenter</p><button class="detail" data-p="geologika">Lihat detail</button>
     </div>
   </article>
 
-  <p class="more" data-cat="ai">Proyek lain: <strong>Multi-Agent Office</strong>, simulasi rapat eksekutif oleh empat agen LLM (CEO, CTO, Analyst, Secretary) dengan memori SQLite dan keputusan lewat konsensus. Dibangun dengan Python dan FastAPI. <button class="detail" data-p="office">Lihat detail</button></p>
+  <article data-cat="konten" data-id="lemminoid" class="row">
+    <figure class="sheet vsheet" data-ch="1">
+      <div class="vstage"></div>
+      <div class="vlist" hidden></div>
+      <figcaption></figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Dokumenter investigatif, footage nyata dan animasi 2D berbasis kode</p>
+      <h3>Lemminoid</h3>
+      <p>Channel YouTube dokumenter investigatif mendalam yang memadukan footage arsip nyata dengan animasi 2D berbasis kode Remotion. Menerapkan standar broadcast lower-third, provenance footnote, serta visualisasi data geospasial presisi.</p>
+      <ul class="flow">
+        <li><b>Saya</b> menyusun narasi investigatif, riset data geopolitik, dan arahan teknis sistem animasi.</li>
+        <li><b>AI agent</b> menulis kode animasi 2D deterministik (React/Remotion) dan tata visual.</li>
+        <li><b>Hasil</b> perpaduan sinematik footage nyata, grafik data akurat, dan visualisasi spasial.</li>
+      </ul>
+      <p class="meta">React, Remotion 2D, TypeScript, AI agent, dokumenter investigatif</p><button class="detail" data-p="lemminoid">Lihat detail</button>
+    </div>
+  </article>
+</section>
+
+<section id="studio" class="studio">
+  <h2>Ruang presentasi</h2>
+  <p class="lead">Beginilah cara saya memaparkan rancangan ke klien: layar demi layar, dengan catatan alasan di balik tiap keputusan. Pilih proyek, lalu telusuri tampilannya. Ketuk gambar untuk memperbesar, atau pakai Mode presentasi.</p>
+  <div class="ptabs" id="ptabs" role="group" aria-label="Pilih proyek"></div>
+  <div class="stage" id="stage" tabindex="0" aria-label="Penampil presentasi desain. Tombol panah kiri dan kanan untuk berganti layar."></div>
 </section>
 
 <section id="latar" class="bg">
   <h2>Latar</h2>
   <dl>
-    <div><dt>2026</dt><dd><strong>Junior Web Programmer, BNSP</strong>Dinyatakan kompeten oleh Badan Nasional Sertifikasi Profesi.</dd></div>
-    <div><dt>2022 sampai 2026</dt><dd><strong>S1 Sistem Informasi, Universitas Gunadarma</strong>IPK 3,72 dari 4,00. Pelatihan Basic Web App Design (2025), Basic Web App Development (2026).</dd></div>
+    <div><dt>2026</dt><dd><strong>Junior Web Programmer, BNSP</strong>Dinyatakan kompeten oleh Badan Nasional Sertifikasi Profesi pada 8 unit kompetensi inti.</dd></div>
+    <div><dt>2022 sampai 2026</dt><dd><strong>S1 Sistem Informasi, Universitas Gunadarma</strong>IPK 3,72 dari 4,00. Menempuh pelatihan Dasar Perancangan Aplikasi Web, Fundamental Web Programming, Java Intermediate, HTML5, dan Go-Lang.</dd></div>
     <div><dt>2019 sampai 2022</dt><dd><strong>MIPA, SMA KORPRI Bekasi</strong>Rata-rata nilai ujian 91,63.</dd></div>
   </dl>
+</section>
+
+<section id="sertifikat" class="certsec">
+  <h2>Sertifikat</h2>
+  <p class="lead">Sertifikasi dan pelatihan yang pernah saya tempuh. Klik kartu bergambar untuk membukanya, lalu geser dengan tombol panah untuk melihat yang lain.</p>
+  <div class="chips" id="certfilter" role="group" aria-label="Filter sertifikat"></div>
+  <div class="certs" id="certs"></div>
+  <button class="detail" id="certmore" hidden>Lihat semua</button>
 </section>
 
 <section id="kontak" class="contact">
@@ -147,6 +188,8 @@
 </div>
 <dialog id="dlg" aria-labelledby="dt"><button class="x" id="dx" aria-label="Tutup">×</button><div id="dbody"></div></dialog>
 <script src="./app.js"></script>
+<script src="./data.js"></script>
+<script src="./showcase.js"></script>
 <script src="./chatbot.js"></script>
 </body>
 </html>
