@@ -120,22 +120,97 @@ var box=document.getElementById('certs'),more=document.getElementById('certmore'
 var L=C.slice().sort(function(a,b){return (b.featured?1:0)-(a.featured?1:0)||(parseInt(b.year)||0)-(parseInt(a.year)||0)});
 var cats=['Semua'];L.forEach(function(c){if(c.cat&&cats.indexOf(c.cat)<0)cats.push(c.cat)});
 function mk(t,c,x,f){var e=el(t,c,x);if(f){e.type='button';e.addEventListener('click',f)}return e}
-var vd=null,vlist=[],vi=0,vim,vcap,vcn;
+var vd=null,vlist=[],vi=0,vpi=0,vim,vcap,vcn,vpagesBar=null;
 function meta(c){return c.issuer+(c.year?', '+c.year:'')}
-function view(i){var n=vlist.length;vi=(i+n)%n;var c=vlist[vi];vim.src=c.img;vim.alt='Sertifikat '+c.title;vcap.textContent='';
- vcap.appendChild(el('span','cap-t',c.title));vcap.appendChild(el('span','cap-d',meta(c)+(c.note?'. '+c.note:'')));vcn.textContent=(vi+1)+' dari '+n}
+function getPages(c){
+ if(c.pages&&c.pages.length)return c.pages;
+ if(c.img)return [c.img];
+ return [];
+}
+function showPage(pIndex){
+ var c=vlist[vi], pgs=getPages(c);
+ if(!pgs.length)return;
+ vpi=(pIndex+pgs.length)%pgs.length;
+ vim.src=pgs[vpi];
+ vim.alt='Sertifikat '+c.title+' - Halaman '+(vpi+1);
+ if(vpagesBar){
+  vpagesBar.textContent='';
+  if(pgs.length>1){
+   pgs.forEach(function(p,k){
+    var pb=mk('button','',k===0?'Halaman 1 (Depan)':'Halaman '+(k+1)+' (Materi & Kurikulum)',function(e){
+     e.stopPropagation();
+     showPage(k);
+     if(window.sfxBeep)window.sfxBeep(600,.04);
+    });
+    pb.setAttribute('aria-selected',k===vpi);
+    vpagesBar.appendChild(pb);
+   });
+   vpagesBar.hidden=false;
+  }else{
+   vpagesBar.hidden=true;
+  }
+ }
+ var n=vlist.length;
+ vcn.textContent=(vi+1)+' dari '+n+(pgs.length>1?' • Hal '+(vpi+1)+'/'+pgs.length:'');
+}
+function view(i){
+ var n=vlist.length;vi=(i+n)%n;var c=vlist[vi];vcap.textContent='';
+ vcap.appendChild(el('span','cap-t',c.title));
+ vcap.appendChild(el('span','cap-d',meta(c)+(c.note?'. '+c.note:'')));
+ showPage(0);
+}
 function openView(list,i){
- if(!vd){vd=el('dialog','cview');var x=mk('button','x','×',function(){vd.close()});x.setAttribute('aria-label','Tutup');
-  var fig=el('div','cvfig');vim=el('img');fig.appendChild(vim);vcap=el('div','capcard');vcn=el('span','cvn');
-  var nav=el('div','cvnav');nav.appendChild(mk('button','','←',function(){view(vi-1)}));nav.appendChild(vcn);nav.appendChild(mk('button','','→',function(){view(vi+1)}));
-  [x,fig,vcap,nav].forEach(function(n){vd.appendChild(n)});document.body.appendChild(vd);
+ if(!vd){
+  vd=el('dialog','cview');
+  var x=mk('button','x','×',function(){vd.close()});
+  x.setAttribute('aria-label','Tutup');
+  var fig=el('div','cvfig');
+  vim=el('img');
+  vim.title='Klik untuk melihat halaman berikutnya';
+  vim.addEventListener('click',function(){
+   var c=vlist[vi], pgs=getPages(c);
+   if(pgs.length>1){
+    showPage(vpi+1);
+    if(window.sfxBeep)window.sfxBeep(600,.04);
+   }
+  });
+  vpagesBar=el('div','cvpages');
+  fig.appendChild(vim);
+  fig.appendChild(vpagesBar);
+  vcap=el('div','capcard');
+  vcn=el('span','cvn');
+  var nav=el('div','cvnav');
+  nav.appendChild(mk('button','','←',function(){view(vi-1);if(window.sfxBeep)window.sfxBeep(520,.04)}));
+  nav.appendChild(vcn);
+  nav.appendChild(mk('button','','→',function(){view(vi+1);if(window.sfxBeep)window.sfxBeep(520,.04)}));
+  [x,fig,vcap,nav].forEach(function(n){vd.appendChild(n)});
+  document.body.appendChild(vd);
   vd.addEventListener('click',function(e){if(e.target===vd)vd.close()});
-  vd.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')view(vi-1);else if(e.key==='ArrowRight')view(vi+1)})}
- vlist=list;view(i);vd.showModal()}
+  vd.addEventListener('close',function(){if(window.sfxBeep)window.sfxBeep(420,.05)});
+  vd.addEventListener('keydown',function(e){
+   if(e.key==='ArrowLeft')view(vi-1);
+   else if(e.key==='ArrowRight')view(vi+1);
+   else if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+    var c=vlist[vi], pgs=getPages(c);
+    if(pgs.length>1)showPage(vpi+(e.key==='ArrowDown'?1:-1));
+   }
+  });
+ }
+ vlist=list;
+ view(i);
+ vd.showModal();
+ if(window.sfxBeep)window.sfxBeep(750,.05);
+}
 function certs(){if(!box)return;box.textContent='';
  var f=L.filter(function(c){return cat==='Semua'||c.cat===cat}),withImg=f.filter(function(c){return c.img});
  f.forEach(function(c,i){if(!all&&i>=LIM)return;var has=!!c.img,card=el(has?'button':'div','cert'+(c.featured?' feat':''));if(has)card.type='button';
-  var th=el('div','th');if(has){var im=el('img');im.src=c.img;im.alt='Sertifikat '+c.title;im.loading='lazy';th.appendChild(im)}
+  var th=el('div','th');if(has){
+   var im=el('img');im.src=c.img;im.alt='Sertifikat '+c.title;im.loading='lazy';th.appendChild(im);
+   if(c.pages&&c.pages.length>1){
+    var pb=el('span','cert-page-badge',c.pages.length+' Halaman');
+    th.appendChild(pb);
+   }
+  }
   else th.appendChild(el('span','ini',c.year||c.title.split(/\s+/).slice(0,2).map(function(w){return w[0]}).join('')));
   card.appendChild(th);var tx=el('div','ct');tx.appendChild(el('strong','',c.title));tx.appendChild(el('span','',meta(c)));if(c.note)tx.appendChild(el('small','',c.note));card.appendChild(tx);
   if(has)card.addEventListener('click',function(){openView(withImg,withImg.indexOf(c))});
