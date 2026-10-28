@@ -64,10 +64,29 @@ if(fine&&!reduce){
  T.forEach(function(t){
   t.addEventListener('pointermove',function(e){if(!gyroOn||e.pointerType!=='mouse')return;var r=t.getBoundingClientRect();tilt(t,((e.clientY-r.top)/r.height-.5)*-8,((e.clientX-r.left)/r.width-.5)*8)});
   t.addEventListener('pointerleave',function(){t.style.transform=''})})}
-// Filter
+// Filter karya & aturan selang-seling (ganjil = gambar kiri/nomer kanan, genap = gambar kanan/nomer kiri)
 var fb=document.querySelectorAll('.filters button'),items=document.querySelectorAll('[data-cat]');
-fb.forEach(function(b){b.addEventListener('click',function(){fb.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
- items.forEach(function(i){i.hidden=b.dataset.f!=='all'&&i.dataset.cat!==b.dataset.f})})});
+function updateAlternatingRows(){
+ var vis=0;
+ items.forEach(function(it){
+  if(!it.hidden){
+   if(vis%2===0){
+    it.classList.remove('flip'); // Nomer 1, 3, 5... : Gambar di KIRI, nomer di KANAN
+   } else {
+    it.classList.add('flip');    // Nomer 2, 4, 6... : Gambar di KANAN, nomer di KIRI
+   }
+   vis++;
+  }
+ });
+}
+fb.forEach(function(b){
+ b.addEventListener('click',function(){
+  fb.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+  items.forEach(function(i){i.hidden=b.dataset.f!=='all'&&i.dataset.cat!==b.dataset.f});
+  updateAlternatingRows();
+ });
+});
+updateAlternatingRows();
 // Modal detail
 var D={
 rag:{k:'Skripsi S1 Sistem Informasi, 2026 — AI Engineering & Fullstack RAG',t:'Chatbot Informasi Akademik BAAK Universitas Gunadarma',s:'Sistem tanya jawab akademik cerdas berbasis Retrieval-Augmented Generation (RAG) untuk layanan informasi Biro Administrasi Akademik & Kemahasiswaan (BAAK) Universitas Gunadarma. Mengimplementasikan Hybrid Search Engine (BM25 Okapi + Dense Vector multilingual-e5-base) dengan Reciprocal Rank Fusion (RRF), Query Transformation otomatis (Groq LLaMA 3.3 70B & Google Gemini), transparansi sitasi dokumen resmi, panel admin incremental indexing, serta perlindungan keamanan stateless JWT.',m:[['Akurasi Jawaban','86,67% (Valid BAAK)'],['Bebas Halusinasi','90,00% (Tanpa Halusinasi)'],['Hit Rate@5 Hybrid','76,7% (+13,4 pt)'],['Mean Reciprocal Rank','0,644 (Tertinggi)'],['Waktu Respons','4,81 detik'],['Retrieval Latency','175 ms']],h:['Pengujian Akurasi Skripsi: Diuji pada 30 skenario pertanyaan akademik resmi BAAK, menghasilkan akurasi jawaban 86,67%, 90,00% bebas halusinasi, dan rata-rata waktu respons 4,81 detik.','Ablation Study Retrieval: Pengujian kuantitatif 4 skenario membuktikan integrasi hybrid BM25 + Vektor menaikkan Hit Rate@5 menjadi 76,7% dan MRR 0,644 dengan retrieval latency hanya 175 ms.','Hybrid Search Engine: Menggabungkan Sparse Search (BM25 Okapi) dan Dense Vector Search (ChromaDB + multilingual-e5-base) menggunakan Reciprocal Rank Fusion (RRF) untuk menjamin akurasi nama dosen dan kode kelas spesifik.','Query Transformation Otomatis: Mentransformasikan pertanyaan bahasa alami mahasiswa menjadi query pencarian formal terstruktur menggunakan model LLM sebelum proses retrieval.','Multi-LLM & Key Rotation Resilience: Integrasi Groq (LLaMA 3.3 70B) dengan failover ke Google Gemini API yang dilengkapi rotasi dinamis 3 API Key dan model cascade fallback.','Transparansi Sitasi Sumber: Setiap bubble jawaban secara transparan menyematkan badge dokumen resmi kampus ([Sumber: ...]) untuk menjamin akurasi faktual.','Incremental Indexing Admin: Panel kontrol administrator kampus untuk mengunggah PDF/TXT secara otomatis dengan ekstraksi tabel pintar, serta sinkronisasi vektor instan berbasis MD5 hash tanpa rebuild total.','Keamanan Terstandarisasi: Dilindungi otentikasi Stateless JWT (HS256) dengan in-memory blacklist, hashing password Bcrypt (12 rounds), reset password OTP via email, dan Rate Limiting (SlowAPI).'],x:'Python 3.11, FastAPI, ChromaDB, BM25 Okapi, HuggingFace (multilingual-e5-base), Groq API, Google Gemini, PyJWT, Bcrypt, SlowAPI, JavaScript, HTML5/CSS3'},
