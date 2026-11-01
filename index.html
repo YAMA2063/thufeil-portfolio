@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Muhammad Thufeil Putrayama, UI/UX, chatbot RAG, web</title>
-<meta name="description" content="Portofolio Muhammad Thufeil Putrayama: chatbot akademik berbasis RAG, UI/UX platform keuangan RT 02 di Figma, desain visual, dan konten video yang dibuat dengan AI agent. Lulusan S1 Sistem Informasi Gunadarma, IPK 3,72.">
+<meta name="description" content="Portofolio Muhammad Thufeil Putrayama, lulusan S1 Sistem Informasi Gunadarma. Chatbot RAG, UI/UX di Figma, aplikasi web, poster, dan video dokumenter yang dibuat dengan AI agent.">
 <link rel="icon" href="./assets/avatar_hero.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +13,14 @@
 </head>
 <body>
 <div class="glow" id="glow" aria-hidden="true"></div>
-<header class="bar">
-  <a href="#atas" class="who">Portofolio</a>
-  <nav><a href="#karya">Karya</a><a href="#studio">Presentasi</a><a href="#latar">Latar</a><a href="#sertifikat">Sertifikat</a><a href="#kontak">Kontak</a><a class="cv" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a></nav>
+<header class="nv" id="nv">
+  <div class="nv-in">
+    <a href="#atas" class="nv-brand"><span class="nv-ava"><img src="./assets/avatar_hero.jpg" alt="" width="42" height="42"></span><span class="nv-bt"><b>Thufeil Putrayama</b><small>Portofolio</small></span></a>
+    <nav class="nv-links" id="nvLinks" aria-label="Menu utama"><span class="nv-mark" aria-hidden="true"></span><a href="#atas"><i>01</i>Beranda</a><a href="#karya"><i>02</i>Karya</a><a href="#studio"><i>03</i>Presentasi</a><a href="#latar"><i>04</i>Latar</a><a href="#sertifikat"><i>05</i>Sertifikat</a><a href="#kontak"><i>06</i>Kontak</a><a class="nv-cvm" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a></nav>
+    <a class="nv-cv" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV</a>
+    <button class="nv-burger" id="nvBurger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nvLinks"><i></i><i></i><i></i></button>
+  </div>
+  <div class="nv-prog" id="nvProg" aria-hidden="true"></div>
 </header>
 
 <main>
@@ -24,36 +29,37 @@
   <h1><span class="first">Muhammad</span><span>Thufeil</span><span>Putrayama</span></h1>
   <div class="photo"><figure class="portrait"><img src="./assets/avatar_hero.jpg" alt="Potret Muhammad Thufeil Putrayama" width="750" height="1080"></figure><span class="sticker">IPK 3,72<small>S1 Sistem Informasi</small></span></div>
   <div class="hero-foot">
-    <p class="lede">Saya merancang antarmuka, membangun chatbot yang tidak mengarang jawaban, dan membuat video dengan AI agent. Lulusan S1 Sistem Informasi Universitas Gunadarma, IPK 3,72, bersertifikat BNSP Junior Web Programmer. Terbuka untuk magang dan posisi junior.</p>
+    <p class="lede">Lulusan S1 Sistem Informasi Universitas Gunadarma dengan sertifikasi BNSP sebagai Junior Web Programmer. Membuat website, chatbot, dan video dokumenter.</p>
     <button class="detail gyrobtn" id="gyrobtn" aria-pressed="false" hidden>Gyro: mati</button>
   </div>
-  <p class="hint">Gerakkan kursor: nama terbakar heatmap, foto ikut miring seperti gyro. Di HP, nyalakan tombol Gyro lalu miringkan ponsel.</p>
+  <p class="hint">Gerakkan kursor di atas nama. Di HP, nyalakan Gyro lalu miringkan ponsel.</p>
 </section>
 
-<div class="band" aria-hidden="true"><div class="track"><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>AI Agent</span><span>Web Development</span><span>Design Thinking</span><span>UI/UX Design</span><span>RAG Chatbot</span><span>Figma</span><span>FastAPI</span><span>AI Agent</span><span>Web Development</span><span>Design Thinking</span></div></div>
+<div class="band" aria-hidden="true"><div class="track"><span>Website dan aplikasi web</span><span>UI/UX dan prototipe Figma</span><span>Chatbot RAG</span><span>AI agent untuk produksi video</span><span>Video dokumenter</span><span>Animasi 2D berbasis kode</span><span>Desain poster</span><span>Website dan aplikasi web</span><span>UI/UX dan prototipe Figma</span><span>Chatbot RAG</span><span>AI agent untuk produksi video</span><span>Video dokumenter</span><span>Animasi 2D berbasis kode</span><span>Desain poster</span></div></div>
 
 <section id="karya" class="work">
   <h2>Karya</h2>
-  <div class="filters" role="group" aria-label="Filter karya"><button aria-pressed="true" data-f="all">Semua</button><button aria-pressed="false" data-f="ai">AI dan chatbot</button><button aria-pressed="false" data-f="uiux">UI/UX dan web</button><button aria-pressed="false" data-f="konten">Konten dan visual</button></div>
+  <div class="filters" role="group" aria-label="Filter karya"><button aria-pressed="true" data-f="all">Semua</button><button aria-pressed="false" data-f="ai">AI dan chatbot</button><button aria-pressed="false" data-f="uiux">UI/UX dan web</button><button aria-pressed="false" data-f="app">Aplikasi (APK)</button><button aria-pressed="false" data-f="konten">Konten dan visual</button></div>
 
   <article data-cat="ai" data-id="rag" class="row">
     <figure class="sheet shot">
       <img src="./assets/chatbot_light_chat.png" alt="Demo percakapan chatbot RAG Gunadarma dengan sitasi dokumen resmi">
       <div class="tabs" role="tablist">
-        <button role="tab" aria-selected="true" data-img="./assets/chatbot_light_chat.png" data-alt="Demo percakapan chatbot RAG Gunadarma" data-cap="Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi fitur sematkan/hapus riwayat percakapan serta sitasi transparan dokumen kampus.">Percakapan RAG</button>
+        <button role="tab" aria-selected="true" data-img="./assets/chatbot_light_chat.png" data-alt="Demo percakapan chatbot RAG Gunadarma" data-cap="Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi rujukan sitasi dokumen kampus dan latensi 4,65 detik.">Percakapan RAG</button>
         <button role="tab" aria-selected="false" data-img="./assets/chatbot_light_beranda.png" data-alt="Tampilan beranda Asisten AI Gunadarma" data-cap="Antarmuka Beranda: Desain interaktif modern tema terang Gunadarma dengan tombol pintas pertanyaan akademik resmi.">Beranda AI</button>
-        <button role="tab" aria-selected="false" data-img="./assets/chatbot_light_admin.png" data-alt="Dashboard manajemen dokumen dan sinkronisasi vektor admin" data-cap="Dashboard Admin: Manajemen 153 dokumen kampus, upload PDF dengan restrukturisasi otomatis, dan incremental indexing ChromaDB.">Dashboard Admin</button>
-        <button role="tab" aria-selected="false" data-img="./assets/chatbot_uji_akurasi.png" data-alt="Hasil pengujian akurasi dan performa skripsi" data-cap="Pengujian Skripsi BAAK: Akurasi jawaban 86,67%, 90,00% bebas halusinasi, dan rata-rata respons 4,81 detik dari 30 skenario uji.">Uji Akurasi</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_light_admin.png" data-alt="Dashboard manajemen dokumen dan sinkronisasi vektor admin" data-cap="Dashboard Admin: Manajemen 153 dokumen kampus, status terindeks ChromaDB, dan rincian chunking.">Dashboard Admin</button>
+        <button role="tab" aria-selected="false" data-img="./assets/chatbot_uji_akurasi.png" data-alt="Hasil pengujian akurasi dan performa skripsi" data-cap="Pengujian Skripsi BAAK: Akurasi jawaban 86,67%, 90,00% bebas halusinasi, dan rata-rata waktu jawab 4,81 detik dari 30 skenario uji.">Uji Akurasi</button>
         <button role="tab" aria-selected="false" data-img="./assets/chatbot_uji_ablation.png" data-alt="Hasil evaluasi ablation study retrieval" data-cap="Ablation Study: Evaluasi kuantitatif 4 skenario membuktikan pencarian hybrid BM25 + Vektor mencapai Hit Rate@5 76,7% dan MRR 0,644.">Ablation Study</button>
       </div>
-      <figcaption>Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi fitur sematkan/hapus riwayat percakapan serta sitasi transparan dokumen kampus.</figcaption>
+      <figcaption>Demo Percakapan: Tanya jawab resmi BAAK bertema terang, dilengkapi rujukan sitasi dokumen kampus dan latensi 4,65 detik.</figcaption>
     </figure>
     <div class="txt">
       <p class="kind">Skripsi S1 Sistem Informasi, 2026</p>
-      <h3>Chatbot Informasi Akademik BAAK dengan Hybrid RAG</h3>
-      <p>Asisten AI cerdas berbasis Retrieval-Augmented Generation (RAG) untuk layanan informasi BAAK Universitas Gunadarma. Menggabungkan pencarian leksikal BM25 Okapi dan Dense Vector Embedding (multilingual-e5-base) menggunakan Reciprocal Rank Fusion (RRF), dilengkapi Query Transformation otomatis (Groq LLaMA 3.3 70B &amp; Google Gemini), transparansi sitasi dokumen resmi kampus, serta panel admin manajemen dokumen.</p>
-      <p class="res">Hasil Pengujian &amp; Evaluasi Ilmiah: Akurasi jawaban 86,67% dan 90,00% bebas halusinasi pada 30 skenario uji BAAK (respons 4,81 detik). Pada evaluasi retrieval hybrid, Hit Rate@5 mencapai 76,7% (+13,4 pt) dan MRR 0,644 dengan latensi pencarian 175 ms.</p>
-      <p class="meta">FastAPI, ChromaDB, BM25 Okapi, HuggingFace E5, Groq LLaMA 3.3, Google Gemini, JWT, Bcrypt, SlowAPI</p><button class="detail" data-p="rag">Lihat detail</button>
+      <h3>Chatbot Informasi Akademik BAAK</h3>
+      <p class="hook">Chatbot yang menjawab pertanyaan seputar kampus dari dokumen resmi, dan menyebutkan sumbernya.</p>
+      <div class="stats"><div class="stat"><b>86,67%</b><span>akurasi jawaban</span></div><div class="stat"><b>90%</b><span>bebas halusinasi</span></div><div class="stat"><b>4,81 dtk</b><span>rata-rata respons</span></div></div>
+      <div class="tgs"><span class="tg">Hybrid RAG</span><span class="tg">FastAPI</span><span class="tg">ChromaDB</span><span class="tg">BM25 + E5</span><span class="tg">Groq LLaMA 3.3</span><span class="tg">Gemini</span><span class="tg more">+3 lagi</span></div>
+      <div class="acts"><button class="detail" data-p="rag">Lihat detail</button></div>
     </div>
   </article>
 
@@ -70,11 +76,34 @@
       <figcaption id="fcap">Dashboard Warga: informasi tagihan tertunda, riwayat pembayaran terbaru, grafik tren kas bulanan, dan diagram alokasi dana RT.</figcaption>
     </figure>
     <div class="txt">
-      <p class="kind">Penulisan Ilmiah</p>
-      <h3>Platform iuran dan kas RT 02 di Figma</h3>
-      <p>Website untuk membayar iuran warga dan melihat laporan kas. Dirancang lewat lima tahap Design Thinking, dari empati sampai uji, dengan prototipe high-fidelity di Figma.</p>
-      <p class="res">Diuji di Maze bersama 17 warga dan pengurus: tingkat penyelesaian tugas 100%.</p>
-      <p class="meta">Figma, Design Thinking, Maze</p><button class="detail" data-p="rt">Lihat detail</button><a class="link" href="https://www.figma.com/design/MJfDGNE7hkUOc93Ey9SGgQ/FILE-ASLI--2-?node-id=0-1&p=f&t=LynvMIPhusCoYndW-0" target="_blank" rel="noopener">Buka di Figma ↗</a>
+      <p class="kind">Penulisan Ilmiah, UI/UX</p>
+      <h3>Platform iuran dan kas RT 02</h3>
+      <p class="hook">Website untuk bayar iuran dan melihat laporan kas RT, dirancang di Figma lewat lima tahap Design Thinking.</p>
+      <div class="stats"><div class="stat"><b>100%</b><span>tugas berhasil diselesaikan</span></div><div class="stat"><b>17</b><span>warga dan pengurus ikut menguji</span></div><div class="stat"><b>5</b><span>tahap Design Thinking</span></div></div>
+      <div class="tgs"><span class="tg">Figma</span><span class="tg">Design Thinking</span><span class="tg">Maze</span><span class="tg">Prototipe high-fidelity</span></div>
+      <div class="acts"><button class="detail" data-p="rt">Lihat detail</button><a class="link" href="https://www.figma.com/design/MJfDGNE7hkUOc93Ey9SGgQ/FILE-ASLI--2-?node-id=0-1&p=f&t=LynvMIPhusCoYndW-0" target="_blank" rel="noopener">Buka di Figma ↗</a></div>
+    </div>
+  </article>
+
+  <article data-cat="uiux" data-id="himpaudi" class="row">
+    <figure class="sheet shot">
+      <img src="./assets/himpaudi_01_hero_beranda.png" alt="Desain Antarmuka HIMPAUDI Bekasi Timur di Figma">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-img="./assets/himpaudi_01_hero_beranda.png" data-alt="Beranda portal HIMPAUDI Bekasi Timur" data-cap="Beranda Utama: navigasi profil organisasi, statistik lembaga PAUD terdaftar, dan agenda kegiatan pendidik.">Beranda</button>
+        <button role="tab" aria-selected="false" data-img="./assets/himpaudi_08_user_kta_digital.png" data-alt="Panel verifikasi dan penerbitan KTA digital guru PAUD" data-cap="KTA Digital Pendidik: verifikasi berkas dan penerbitan identitas resmi guru PAUD berbasis QR Code unik untuk validasi keanggotaan dan presensi seminar.">KTA Digital</button>
+        <button role="tab" aria-selected="false" data-img="./assets/himpaudi_07_user_dashboard.png" data-alt="Dashboard pendidik dan guru PAUD" data-cap="Dashboard Pendidik: manajemen keikutsertaan pelatihan, sertifikat kegiatan, dan tiket elektronik seminar.">Portal Guru</button>
+        <button role="tab" aria-selected="false" data-img="./assets/himpaudi_11_admin_scanner_presensi.png" data-alt="Panel Administrator HIMPAUDI Bekasi Timur" data-cap="Panel Administrator: dashboard manajemen data lembaga, statistik pendidik, publikasi warta kegiatan, dan kontrol sistem.">Admin Panel</button>
+        <button role="tab" aria-selected="false" data-img="./assets/himpaudi_06_figma_canvas_overview.png" data-alt="Struktur Kanvas Master 55 Layar Desain Sistem di Figma" data-cap="Arsitektur Kanvas Figma: perancangan 55 frame sistem informasi terstruktur (Publik, Portal Guru, Panel Admin) lengkap dengan autolayout dan design system.">Kanvas Figma</button>
+      </div>
+      <figcaption>Beranda Utama: navigasi profil organisasi, statistik lembaga PAUD terdaftar, dan agenda kegiatan pendidik.</figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Mata Kuliah Pengelolaan Proyek Sistem Informasi (4 SKS) • UI/UX &amp; SDD</p>
+      <h3>Sistem Informasi Website HIMPAUDI Bekasi Timur</h3>
+      <p class="hook">Proyek mata kuliah Pengelolaan Proyek Sistem Informasi (4 SKS) di Universitas Gunadarma. Merancang sistem informasi terintegrasi dan antarmuka komprehensif untuk HIMPAUDI Cabang Bekasi Timur, mencakup direktori PAUD, KTA digital ber-QR Code, manajemen diklat, dan dokumen SDD 92 halaman.</p>
+      <div class="stats"><div class="stat"><b>4 SKS</b><span>Pengelolaan Proyek SI</span></div><div class="stat"><b>55</b><span>frame Figma terstruktur</span></div><div class="stat"><b>92</b><span>halaman dokumen SDD</span></div></div>
+      <div class="tgs"><span class="tg">Pengelolaan Proyek SI (4 SKS)</span><span class="tg">Figma</span><span class="tg">UI/UX Design</span><span class="tg">Design System</span><span class="tg">Dokumen SDD</span></div>
+      <div class="acts"><button class="detail" data-p="himpaudi">Lihat detail</button><a class="link" href="https://www.figma.com/design/ThaprloZv785qm5cA30DSQ/HiMPAUDI--MIRACLE-?node-id=7044-630&amp;t=krompKvzT8y9j6bt-1" target="_blank" rel="noopener">Buka di Figma ↗</a></div>
     </div>
   </article>
 
@@ -86,25 +115,99 @@
         <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_barang.png" data-alt="Master data pakaian dan barang BrandedYM" data-cap="Master Data Barang: tabel kode SKU, kategori pakaian, satuan, peringatan batas minimum stok, serta tombol aksi CRUD.">Master Barang</button>
         <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_persediaan.png" data-alt="Pencatatan mutasi persediaan masuk dan keluar" data-cap="Transaksi Persediaan: kontrol mutasi stok masuk (supplier) dan keluar (penjualan) dengan status ketersediaan.">Transaksi Stok</button>
         <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_laporan.png" data-alt="Halaman laporan dengan filter tanggal dan ekspor Excel PDF" data-cap="Laporan & Ekspor: filter rentang tanggal dan tipe transaksi, dilengkapi tombol ekspor instan ke Excel dan PDF.">Laporan PDF/Excel</button>
+        <button role="tab" aria-selected="false" data-img="./assets/brandedym_fitur_manajemen_pengguna.png" data-alt="Halaman manajemen akun dan pengguna sistem BrandedYM" data-cap="Manajemen Pengguna: kontrol hak akses multi-user, pembagian role Administrator dan Pimpinan, serta status akun aktif.">Pengguna</button>
       </div>
       <figcaption>Dashboard analitik persediaan: KPI metrik stok riil, grafik mutasi arus barang 6 bulan, dan monitoring stok minimum.</figcaption>
     </figure>
     <div class="txt">
-      <p class="kind">Aplikasi Web Fullstack</p>
-      <h3>BrandedYM — Sistem Persediaan Toko Pakaian</h3>
-      <p>Sistem manajemen persediaan dan rantai pasok pakaian terintegrasi. Menangani pencatatan mutasi stok masuk (supplier) dan keluar (penjualan), monitoring stok menipis otomatis (safety stock alert), serta pembuatan laporan akuntabel siap cetak.</p>
-      <p class="res">Dilengkapi kartu stok otomatis, visualisasi arus barang interaktif Chart.js, manajemen hak akses (Admin dan Staff), serta ekspor laporan PDF dan Excel.</p>
-      <p class="meta">Laravel 11, PHP 8.4, MySQL, Blade Engine, Bootstrap 5 (Dark Glassmorphism), Chart.js</p><button class="detail" data-p="brandedym">Lihat detail</button>
+      <p class="kind">Aplikasi web fullstack</p>
+      <h3>BrandedYM, sistem persediaan toko pakaian</h3>
+      <p class="hook">Aplikasi untuk mencatat stok masuk dan keluar di toko pakaian, dengan peringatan otomatis kalau stok hampir habis.</p>
+      <div class="stats"><div class="stat"><b>2</b><span>peran: Admin dan Staff</span></div><div class="stat sm"><b>PDF + Excel</b><span>ekspor laporan</span></div><div class="stat sm"><b>Otomatis</b><span>peringatan stok menipis</span></div></div>
+      <div class="tgs"><span class="tg">Laravel 11</span><span class="tg">PHP 8.4</span><span class="tg">MySQL</span><span class="tg">Bootstrap 5</span><span class="tg">Chart.js</span><span class="tg">Blade</span></div>
+      <div class="acts"><button class="detail" data-p="brandedym">Lihat detail</button></div>
+    </div>
+  </article>
+
+  <article data-cat="app" data-id="bstation" class="row flip">
+    <figure class="sheet shot">
+      <img src="./assets/bstation_01_dashboard_full.png" alt="Dashboard Bstation & Bilibili Booster Unified View Engine">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-img="./assets/bstation_01_dashboard_full.png" data-alt="Dashboard Bstation Booster tema cyberpunk glassmorphic" data-cap="Dashboard Cyberpunk: kontrol glassmorphic lengkap dengan input target video dan monitoring views.">Dashboard</button>
+        <button role="tab" aria-selected="false" data-img="./assets/bstation_03_telemetry_active.png" data-alt="Pemantauan sesi streaming telemetri aktif" data-cap="Sesi Telemetri Aktif: pemantauan otomatisasi views real-time, circular gauges, dan progress bar pemutaran video.">Sesi Aktif</button>
+        <button role="tab" aria-selected="false" data-img="./assets/bstation_02_dashboard_ready.png" data-alt="Status awal sistem dan konfigurasi parameter engine" data-cap="Status Siap: sensor status live terhubung ke OTT gateway, form input URL, dan kalibrasi parameter engine.">Mode Siap</button>
+        <button role="tab" aria-selected="false" data-img="./assets/bstation_04_apk_showcase_wide.png" data-alt="Tampilan Aplikasi Android APK Bstation Booster" data-cap="APK Android Native: antarmuka aplikasi smartphone mandiri berbasis Java Android API 34 untuk simulasi telemetri mobile OTT.">APK Android</button>
+        <button role="tab" aria-selected="false" data-img="./assets/bstation_05_repo_architecture.png" data-alt="Repositori kode sumber Bstation Telemetry Engine di GitHub" data-cap="Arsitektur Sistem: struktur repositori resmi mencakup C# launcher, server Node.js, dan source code APK Android.">Repositori</button>
+      </div>
+      <figcaption>Dashboard Cyberpunk: kontrol glassmorphic lengkap dengan input target video dan monitoring views.</figcaption>
+    </figure>
+    <div class="txt">
+      <p class="kind">Aplikasi Multi-Platform, Network &amp; Protocol Engineering</p>
+      <h3>Bstation &amp; Bilibili Views Booster (Telemetry Engine)</h3>
+      <p class="hook">Simulator telemetri protokol streaming video OTT dan aplikasi otomasi multi-platform (Desktop PC &amp; Android APK) untuk analisis penambahan views pada platform Bstation (.tv) dan Bilibili (.com).</p>
+      <div class="stats"><div class="stat"><b>3</b><span>platform (Web, PC C#, APK)</span></div><div class="stat"><b>100%</b><span>simulasi handshake QoS</span></div><div class="stat sm"><b>Random</b><span>delay anti-rate limit</span></div></div>
+      <div class="tgs"><span class="tg">Node.js</span><span class="tg">Android Native (Java)</span><span class="tg">C# .NET</span><span class="tg">Glassmorphic UI</span><span class="tg">OTT Protocol</span></div>
+      <div class="acts"><button class="detail" data-p="bstation">Lihat detail</button></div>
     </div>
   </article>
 
   <article data-cat="konten" data-id="fmvp" class="row flip">
-    <figure class="sheet poster"><img src="./assets/fmvp_poster.png" alt="Poster FMVP 2026 PMPL ID Spring Final untuk BOOM Esports"></figure>
+    <figure class="sheet shot poster">
+      <img src="./assets/alter_ego_ares_pmdc.jpg" alt="Poster Super Team Alter Ego Ares 144 Points PMDC x PMPL ID Spring 2026">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-pane="ares" data-img="./assets/alter_ego_ares_pmdc.jpg" data-alt="Poster Super Team Alter Ego Ares (144 Points PMPL Week 3)" data-cap="Alter Ego Ares (144 Poin Week 3): aksi ground smash berapi, suar airdrop merah, buggy tempur, dan trofi Golden Helmet PUBG Mobile.">Alter Ego Ares (144 Pts)</button>
+        <button role="tab" aria-selected="false" data-pane="boom" data-img="./assets/fmvp_poster.png" data-alt="Poster FMVP 2026 PMPL ID Spring Final untuk BOOM Esports" data-cap="BOOM Esports (Final MVP): perayaan pemain terbaik PMPL ID Spring dengan atmosfer rim-light hutan malam, supercar, dan grading ungu-emas.">BOOM Esports (FMVP)</button>
+      </div>
+      <figcaption>Alter Ego Ares (144 Poin Week 3): aksi ground smash berapi, suar airdrop merah, buggy tempur, dan trofi Golden Helmet PUBG Mobile.</figcaption>
+    </figure>
     <div class="txt">
-      <p class="kind">PUBG Mobile Design Challenge Season 2</p>
-      <h3>Poster FMVP untuk BOOM Esports</h3>
-      <p>Poster perayaan Final MVP 2026 PMPL ID Spring. Subjek pemain disusun berlapis dengan latar hutan malam dan mobil, diberi grading ungu, merah tua, dan emas, lalu statistik pertandingan ditata sebagai tipografi.</p>
-      <p class="meta">Canva, komposisi visual, color grading</p><button class="detail" data-p="fmvp">Lihat detail</button>
+      <!-- Panel 1: Alter Ego Ares -->
+      <div class="poster-pane" data-pane="ares">
+        <p class="kind">PUBG Mobile Design Challenge S2 • Generative AI &amp; Directed Pose Synthesis</p>
+        <h3>Poster Super Team Alter Ego Ares</h3>
+        <p class="hook">Karya poster resmi bertema &quot;Super Team Back in Action&quot; (144 Poin Week 3). Diproduksi melalui alur kerja AI generatif terarah: merekayasa pose dinamis para atlet via AI pose transfer, menyusun staging multi-subjek secara presisi, lalu menyatukan pencahayaan api medan tempur secara generatif (image-to-image).</p>
+        <div class="stats swatches">
+          <div class="stat"><i style="background:#e63946"></i><span>Merah jersey</span></div>
+          <div class="stat"><i style="background:#ffb703"></i><span>Emas trofi</span></div>
+          <div class="stat"><i style="background:#15181f"></i><span>Charcoal gelap</span></div>
+        </div>
+        <div class="tgs">
+          <span class="tg">Generative AI</span>
+          <span class="tg">AI Pose Transfer</span>
+          <span class="tg">Multi-Subject Staging</span>
+          <span class="tg">Image-to-Image Blending</span>
+          <span class="tg">Esports Branding</span>
+          <span class="tg">Tipografi Statistik</span>
+        </div>
+        <div class="acts">
+          <button class="detail" data-p="ares_pmdc">Lihat detail</button>
+          <a class="link" href="https://www.instagram.com/spidiron/" target="_blank" rel="noopener">Instagram @spidiron ↗</a>
+        </div>
+      </div>
+
+      <!-- Panel 2: BOOM Esports FMVP -->
+      <div class="poster-pane" data-pane="boom" hidden>
+        <p class="kind">PUBG Mobile Design Challenge S2 • Generative AI &amp; Cinematic Lighting</p>
+        <h3>Poster Final MVP BOOM Esports</h3>
+        <p class="hook">Poster perayaan pemain terbaik Final MVP 2026 PMPL ID Spring. Memanfaatkan manipulasi pose karakter berbasis AI untuk gestur heroik, menyusun komposisi supercar dan latar hutan malam, lalu menyelaraskan pencahayaan rim-light dan grading ungu-emas secara generatif.</p>
+        <div class="stats swatches">
+          <div class="stat"><i style="background:#4b2a7a"></i><span>Ungu gelap</span></div>
+          <div class="stat"><i style="background:#8a1c2b"></i><span>Merah tua</span></div>
+          <div class="stat"><i style="background:#d4a63a"></i><span>Emas</span></div>
+        </div>
+        <div class="tgs">
+          <span class="tg">Generative AI</span>
+          <span class="tg">AI Pose Manipulation</span>
+          <span class="tg">Cinematic Rim-Light</span>
+          <span class="tg">Image-to-Image Synthesis</span>
+          <span class="tg">Esports Branding</span>
+          <span class="tg">Tipografi Statistik</span>
+        </div>
+        <div class="acts">
+          <button class="detail" data-p="fmvp">Lihat detail</button>
+          <a class="link" href="https://www.instagram.com/spidiron/" target="_blank" rel="noopener">Instagram @spidiron ↗</a>
+        </div>
+      </div>
     </div>
   </article>
 
@@ -115,15 +218,14 @@
       <figcaption></figcaption>
     </figure>
     <div class="txt">
-      <p class="kind">Video dokumenter sains dan geologi, alur kerja AI agent</p>
-      <h3>GeoLogika</h3>
-      <p>Channel YouTube dokumenter investigatif sains & geologi kebumian Nusantara. Seluruh produksinya dibuat lewat alur kerja AI agent: riset naskah ilmiah, tata visual sinematik, kinetic typography, dan sinkronisasi audio-visual zero-gap.</p>
-      <ul class="flow">
-        <li><b>Saya</b> merumuskan riset, struktur bab naskah, prompt, dan verifikasi fakta ilmiah.</li>
-        <li><b>AI agent</b> mengeksekusi sinkronisasi audio Faster-Whisper, naskah, dan composite visual.</li>
-        <li><b>Hasil</b> video dokumenter YouTube berstandar siaran ilmiah yang konsisten.</li>
-      </ul>
-      <p class="meta">Prompt engineering, AI agent automation, Faster-Whisper, video dokumenter</p><button class="detail" data-p="geologika">Lihat detail</button><a class="yt-channel-link" href="https://www.youtube.com/@GeoLogikaOfficial" target="_blank" rel="noopener">Kunjungi Channel YouTube @GeoLogikaOfficial ↗</a>
+      <p class="kind">Channel YouTube, sains dan geologi</p>
+      <div class="chead"><img class="clogo" src="./assets/geologika/logo_sm.jpg" alt="Logo GeoLogika" width="56" height="56"><div><h3>GeoLogika</h3><p class="handle"><span data-handle>@GeoLogikaOfficial</span>, <span data-vcount>3</span> video</p></div></div>
+      <p class="hook">Dokumenter sains dan geologi Indonesia, diarahkan lewat prompt dan dikerjakan oleh AI agent.</p>
+      <div class="roles">
+        <div class="role me"><b>Pengarah</b><div class="tgs"><span class="tg">Riset</span><span class="tg">Struktur naskah</span><span class="tg">Prompt</span><span class="tg">Verifikasi fakta</span></div></div>
+        <div class="role ai"><b>AI agent</b><div class="tgs"><span class="tg">Sinkron audio Faster-Whisper</span><span class="tg">Composite visual</span><span class="tg">Kinetic typography</span></div></div>
+      </div>
+      <div class="acts"><button class="detail" data-p="geologika">Lihat detail</button><a class="yt-channel-link" href="https://www.youtube.com/@GeoLogikaOfficial" target="_blank" rel="noopener">Buka channel ↗</a></div>
     </div>
   </article>
 
@@ -134,59 +236,80 @@
       <figcaption></figcaption>
     </figure>
     <div class="txt">
-      <p class="kind">Dokumenter investigatif, footage nyata dan animasi 2D berbasis kode</p>
-      <h3>Lemminoid</h3>
-      <p>Channel YouTube dokumenter investigatif mendalam yang memadukan footage arsip nyata dengan animasi 2D berbasis kode Remotion. Menerapkan standar broadcast lower-third, provenance footnote, serta visualisasi data geospasial presisi.</p>
-      <ul class="flow">
-        <li><b>Saya</b> menyusun narasi investigatif, riset data geopolitik, dan arahan teknis sistem animasi.</li>
-        <li><b>AI agent</b> menulis kode animasi 2D deterministik (React/Remotion) dan tata visual.</li>
-        <li><b>Hasil</b> perpaduan sinematik footage nyata, grafik data akurat, dan visualisasi spasial.</li>
-      </ul>
-      <p class="meta">React, Remotion 2D, TypeScript, AI agent, dokumenter investigatif</p><button class="detail" data-p="lemminoid">Lihat detail</button><a class="yt-channel-link" href="https://www.youtube.com/@Lemminoid" target="_blank" rel="noopener">Kunjungi Channel YouTube @Lemminoid ↗</a>
+      <p class="kind">Channel YouTube, dokumenter investigatif</p>
+      <div class="chead"><img class="clogo" src="./assets/lemminoid/logo_sm.jpg" alt="Logo Lemminoid" width="56" height="56"><div><h3>Lemminoid</h3><p class="handle"><span data-handle>@Lemminoid</span>, <span data-vcount>2</span> video</p></div></div>
+      <p class="hook">Dokumenter investigatif yang memadukan footage nyata dengan animasi 2D. Animasinya ditulis AI lewat kode.</p>
+      <div class="roles">
+        <div class="role me"><b>Pengarah</b><div class="tgs"><span class="tg">Narasi investigatif</span><span class="tg">Riset data geopolitik</span><span class="tg">Arahan animasi</span></div></div>
+        <div class="role ai"><b>AI agent</b><div class="tgs"><span class="tg">Kode animasi React + Remotion</span><span class="tg">Tata visual</span><span class="tg">Grafik data dan peta</span></div></div>
+      </div>
+      <div class="acts"><button class="detail" data-p="lemminoid">Lihat detail</button><a class="yt-channel-link" href="https://www.youtube.com/@Lemminoid" target="_blank" rel="noopener">Buka channel ↗</a></div>
     </div>
   </article>
 </section>
 
 <section id="studio" class="studio">
   <h2>Ruang presentasi</h2>
-  <p class="lead">Beginilah cara saya memaparkan rancangan ke klien: layar demi layar, dengan catatan alasan di balik tiap keputusan. Pilih proyek, lalu telusuri tampilannya. Ketuk gambar untuk memperbesar, atau pakai Mode presentasi.</p>
+  <p class="lead">Rancangan ditampilkan layar demi layar, seperti presentasi ke klien. Pilih proyek, lalu klik panah atau thumbnail untuk pindah layar. Tiap layar dilengkapi catatan alasan desainnya.</p>
   <div class="ptabs" id="ptabs" role="group" aria-label="Pilih proyek"></div>
   <div class="stage" id="stage" tabindex="0" aria-label="Penampil presentasi desain. Tombol panah kiri dan kanan untuk berganti layar."></div>
 </section>
 
-<section id="latar" class="bg">
+<section id="latar" class="bg latar">
   <h2>Latar</h2>
-  <dl>
-    <div><dt>2026</dt><dd><strong>Junior Web Programmer, BNSP</strong>Dinyatakan kompeten oleh Badan Nasional Sertifikasi Profesi pada 8 unit kompetensi inti.</dd></div>
-    <div><dt>2022 sampai 2026</dt><dd><strong>S1 Sistem Informasi, Universitas Gunadarma</strong>IPK 3,72 dari 4,00. Menempuh pelatihan Dasar Perancangan Aplikasi Web, Fundamental Web Programming, Java Intermediate, HTML5, dan Go-Lang.</dd></div>
-    <div><dt>2019 sampai 2022</dt><dd><strong>MIPA, SMA KORPRI Bekasi</strong>Rata-rata nilai ujian 91,63.</dd></div>
-  </dl>
+  <p class="lead">Dari jurusan MIPA di SMA, lanjut kuliah Sistem Informasi, lalu sertifikasi BNSP.</p>
+  <ol class="tl" id="tl">
+    <li class="tli" style="--c:var(--heat)"><span class="node"></span>
+      <div class="yr"><b>2026</b><span>Sertifikasi</span></div>
+      <div class="tc"><h3>Junior Web Programmer, BNSP</h3><p class="org">Badan Nasional Sertifikasi Profesi</p>
+        <p>Lulus uji kompetensi dengan hasil Kompeten.</p>
+        <div class="units" role="img" aria-label="8 dari 8 unit kompeten"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div><p class="ulab">8 dari 8 unit dinyatakan Kompeten</p><p class="plab">Pelatihan di jalur ini</p><div class="tgs"><span class="tg">Basic Web Application Design</span><span class="tg">Basic Web Application Development</span></div></div></li>
+    <li class="tli" style="--c:var(--blue)"><span class="node"></span>
+      <div class="yr"><b>2022 sampai 2026</b><span>Kuliah</span></div>
+      <div class="tc"><h3>S1 Sistem Informasi</h3><p class="org">Universitas Gunadarma</p>
+        <div class="meter" role="img" aria-label="IPK 3,72 dari 4,00"><div class="mt"><span>IPK</span><b>3,72 / 4,00</b></div><div class="mbar"><i style="--w:93%"></i></div></div><p class="ulab">152 SKS, 74 mata kuliah, skripsi bernilai A</p>
+        <div class="tgs"><span class="tg">Pengelolaan Proyek Sistem Informasi (4 SKS)</span><span class="tg">Fundamental Desktop Programming</span><span class="tg">Fundamental Web Programming</span><span class="tg">Java Programming for Beginner</span><span class="tg">Java for Intermediate</span><span class="tg">Building Website using HTML 5</span><span class="tg">Go-Lang for Beginner</span></div>
+        <div class="acts"><button class="detail" type="button" data-doc="s1">Lihat rangkuman nilai (3 halaman)</button></div></div></li>
+    <li class="tli" style="--c:var(--sun)"><span class="node"></span>
+      <div class="yr"><b>2019 sampai 2022</b><span>SMA</span></div>
+      <div class="tc"><h3>MIPA, SMA KORPRI Bekasi</h3><p class="org">Jurusan Sains dan Matematika</p>
+        <div class="meter" role="img" aria-label="Rata-rata nilai ujian 91,63 dari 100"><div class="mt"><span>Rata-rata nilai ujian</span><b>91,63 / 100</b></div><div class="mbar"><i style="--w:91.63%"></i></div></div>
+        <div class="acts"><button class="detail" type="button" data-doc="sma">Lihat ijazah dan daftar nilai (2 halaman)</button></div></div></li>
+  </ol>
 </section>
 
 <section id="sertifikat" class="certsec">
   <h2>Sertifikat</h2>
-  <p class="lead">Sertifikasi dan pelatihan yang pernah saya tempuh. Klik kartu bergambar untuk membukanya, lalu geser dengan tombol panah untuk melihat yang lain.</p>
+  <p class="lead">Sertifikat dan pelatihan yang pernah diikuti. Klik kartunya untuk melihat lebih besar.</p>
   <div class="chips" id="certfilter" role="group" aria-label="Filter sertifikat"></div>
   <div class="certs" id="certs"></div>
   <button class="detail" id="certmore" hidden>Lihat semua</button>
 </section>
 
 <section id="kontak" class="contact">
-  <h2>Mari bicara</h2>
-  <p>Tersedia untuk Maganghub dan Siapkerja, posisi junior web developer, UI/UX designer, atau content creator. Domisili Babelan, Bekasi; terbuka untuk Jabodetabek dan remote.</p>
-  <a class="mail" href="mailto:putrayama63@gmail.com">putrayama63@gmail.com</a>
-  <p class="alt"><a href="https://wa.me/6281514713206" target="_blank" rel="noopener">WhatsApp +62 815-1471-3206</a> <a href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download>Unduh CV (PDF)</a></p>
+  <div class="ct-in">
+    <h2>Kontak</h2>
+    <p class="lead">Terbuka untuk kolaborasi, proyek, dan peluang kerja di bidang web, UI/UX, dan konten. Berdomisili di Babelan, Bekasi; bisa bekerja di Jabodetabek atau remote.</p>
+    <div class="ct-grid">
+      <a class="ct-card" style="--c:var(--sun)" href="mailto:putrayama63@gmail.com"><small>Email</small><b>putrayama63@gmail.com</b><span>Kirim email →</span></a>
+      <a class="ct-card" style="--c:var(--heat)" href="https://wa.me/6281514713206" target="_blank" rel="noopener"><small>WhatsApp</small><b>+62 815-1471-3206</b><span>Buka chat →</span></a>
+      <a class="ct-card" style="--c:var(--blue)" href="./assets/CV_ATS_MUHAMMAD_THUFEIL_PUTRAYAMA.pdf" download><small>CV</small><b>Unduh CV</b><span>Format PDF →</span></a>
+    </div>
+  </div>
 </section>
 </main>
 <footer>© 2026 Muhammad Thufeil Putrayama</footer>
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau gambar layar penuh" hidden>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Mode presentasi pratinjau gambar layar penuh" hidden>
   <button class="lightbox-close" id="lbClose" aria-label="Tutup pratinjau">×</button>
+  <button class="lightbox-nav lb-prev" id="lbPrev" aria-label="Layar sebelumnya" title="Layar sebelumnya (Panah Kiri)">‹</button>
+  <button class="lightbox-nav lb-next" id="lbNext" aria-label="Layar berikutnya" title="Layar berikutnya (Panah Kanan)">›</button>
   <div class="lightbox-content">
+    <div class="lightbox-counter" id="lbCounter"></div>
     <img id="lbImg" src="" alt="Pratinjau gambar">
-    <p id="lbCap" class="lightbox-cap"></p>
+    <div id="lbCap" class="lightbox-cap"></div>
   </div>
 </div>
-<dialog id="dlg" aria-labelledby="dt"><button class="x" id="dx" aria-label="Tutup">×</button><div id="dbody"></div></dialog>
+<dialog id="dlg" aria-labelledby="dt"><button class="x modal-close" id="dx" aria-label="Tutup">×</button><div id="dbody"></div></dialog>
 <script src="./app.js"></script>
 <script src="./data.js"></script>
 <script src="./showcase.js"></script>

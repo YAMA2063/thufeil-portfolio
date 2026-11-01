@@ -5,46 +5,48 @@
    history = array {role:'user'|'bot', text}. */
 (function(){
 var CHAT_API_URL=''; // contoh: 'https://domain-anda.com/api/chat'
+var AVATAR='./assets/avatar_hero.jpg';
+var PROMPTS=[['Karya terbaik','Apa karya terbaik Thufeil?'],['Skripsi chatbot','Seberapa akurat chatbot skripsinya?'],['GeoLogika dan Lemminoid','Apa itu GeoLogika dan Lemminoid?'],['Cara menghubungi','Bagaimana cara menghubungi Thufeil?']];
 window.PortfolioChat={handler:null};
-var hist=[],busy=false;
-function localAnswer(msg){
- var s=(msg||'').toLowerCase();
- if(s.includes('karya')||s.includes('proyek')||s.includes('portfolio')||s.includes('buat apa')){
-  return 'Karya unggulan Muhammad Thufeil Putrayama:\n1. 🎓 Chatbot Informasi Akademik BAAK (Skripsi S1: FastAPI, Hybrid BM25 + HuggingFace E5, Groq & Gemini, 153 dokumen resmi, akurasi 86,67%).\n2. 🏢 BrandedYM (Sistem Informasi Persediaan Toko Pakaian berbasis Laravel 11 & MySQL).\n3. 🏘️ Platform Kas RT 02 (Desain UI/UX Figma dengan pengujian Maze tingkat penyelesaian 100%).\n4. 🎮 Desain Visual & Poster FMVP PUBG Mobile Season 2.';
- }
- if(s.includes('skripsi')||s.includes('akurasi')||s.includes('rag')||s.includes('chatbot')){
-  return 'Chatbot RAG Gunadarma adalah proyek penelitian skripsi S1 Thufeil di Sistem Informasi (IPK 3,72). Menggabungkan BM25 Okapi dan HuggingFace Multilingual E5 via Reciprocal Rank Fusion (RRF), serta Query Transformation otomatis (Gemini 3 & Groq LLaMA 3.3). Hasil pengujian 30 skenario BAAK membuktikan akurasi jawaban 86,67% dan 90,00% bebas halusinasi. Evaluasi retrieval membuktikan Hit Rate@5 mencapai 76,7% (+13,4 pt), MRR 0,644, sitasi transparan dokumen resmi, dan panel admin dokumen.';
- }
- if(s.includes('kontak')||s.includes('hubungi')||s.includes('email')||s.includes('wa')||s.includes('whatsapp')){
-  return 'Hubungi Thufeil melalui:\n📧 Email: putrayama63@gmail.com\n💬 WhatsApp: +62 815-1471-3206\n📍 Domisili: Bekasi / Jabodetabek (Terbuka untuk On-site & Remote).';
- }
- if(s.includes('pendidikan')||s.includes('kuliah')||s.includes('ipk')||s.includes('lulusan')||s.includes('bnsp')){
-  return 'Thufeil adalah lulusan S1 Sistem Informasi Universitas Gunadarma (IPK 3,72 dari 4,00) serta memiliki sertifikasi kompetensi resmi BNSP Junior Web Programmer.';
- }
- return 'Halo! Saya asisten portofolio Thufeil. Thufeil berfokus pada AI Engineering (RAG Chatbot), Fullstack Web Development (Laravel & FastAPI), serta UI/UX Design di Figma. Silakan lihat rincian proyek di bagian Karya atau tanyakan lebih lanjut!';
-}
+var hist=[],busy=false,tipShown=false,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function ask(msg){
  if(typeof window.PortfolioChat.handler==='function')return Promise.resolve(window.PortfolioChat.handler(msg,hist));
- if(CHAT_API_URL)return fetch(CHAT_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:hist})}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(d){return d.reply}).catch(function(){return localAnswer(msg)});
- return Promise.resolve(localAnswer(msg));
+ if(CHAT_API_URL)return fetch(CHAT_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:hist})}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(d){return d.reply});
+ return Promise.resolve('Maaf, chatbot ini belum tersambung ke sistem jawabannya, jadi belum bisa menjawab. (Untuk pengembang: isi CHAT_API_URL atau window.PortfolioChat.handler di chatbot.js.)');
 }
-function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x)e.textContent=x;return e}
-var open=el('button','cb-open','Tanya chatbot');open.setAttribute('aria-haspopup','dialog');
-var box=el('section','cb');box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-label','Chatbot portofolio');
-var head=el('header');head.appendChild(el('span','','Tanya soal portofolio ini'));var close=el('button','','×');close.setAttribute('aria-label','Tutup chatbot');head.appendChild(close);
-var log=el('div','cb-log');log.setAttribute('aria-live','polite');
-var chips=el('div','cb-chips');
-var form=el('form');var inp=el('input');inp.placeholder='Tulis pertanyaan';inp.setAttribute('aria-label','Pertanyaan');inp.autocomplete='off';var send=el('button','','Kirim');send.type='submit';form.appendChild(inp);form.appendChild(send);
-box.appendChild(head);box.appendChild(log);box.appendChild(chips);box.appendChild(form);document.body.appendChild(open);document.body.appendChild(box);
-function add(role,text){var m=el('div','m '+(role==='user'?'u':''),text);log.appendChild(m);log.scrollTop=log.scrollHeight;return m}
-function submit(text){text=(text||'').trim();if(!text||busy)return;busy=true;chips.hidden=true;add('user',text);hist.push({role:'user',text:text});
- var dots=el('div','m dots');dots.appendChild(el('i'));dots.appendChild(el('i'));dots.appendChild(el('i'));log.appendChild(dots);log.scrollTop=log.scrollHeight;
- ask(text).then(function(r){dots.remove();add('bot',r);hist.push({role:'bot',text:r});if(window.sfxBeep)window.sfxBeep(880,.08)})
- .catch(function(){dots.remove();add('bot','Maaf, chatbot sedang tidak bisa dijangkau. Coba lagi sebentar.')}).then(function(){busy=false;inp.focus()})}
-['Apa karya utama Thufeil?','Seberapa akurat chatbot skripsinya?','Bagaimana cara menghubungi Thufeil?'].forEach(function(q){var b=el('button','',q);b.type='button';b.addEventListener('click',function(){submit(q)});chips.appendChild(b)});
-add('bot','Halo! Saya asisten portofolio Thufeil. Tanyakan soal karya, skripsi, sertifikasi, atau cara menghubunginya.');
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function pic(cls){var w=el('span',cls),i=el('img');i.src=AVATAR;i.alt='';i.width=48;i.height=48;w.appendChild(i);return w}
+// peluncur: foto dengan cincin gradien berputar
+var fab=el('button','cx-fab');fab.type='button';fab.setAttribute('aria-haspopup','dialog');
+var fa=pic('cx-ava');fa.appendChild(el('i','cx-on'));var fl=el('span','cx-lab');fl.appendChild(el('b','','Tanya asisten'));fl.appendChild(el('small','','AI portofolio'));
+fab.appendChild(fa);fab.appendChild(fl);
+var tip=el('button','cx-tip','Ingin tahu karya terbaiknya? Tanya langsung di sini.');tip.type='button';tip.hidden=true;
+// panel
+var box=el('section','cx');box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-label','AI portofolio');
+var inn=el('div','cx-in'),head=el('header','cx-head');
+var hm=el('div','cx-who');hm.appendChild(pic('cx-ava sm'));var ht=el('div');ht.appendChild(el('b','','Asisten Thufeil'));var st=el('small');st.appendChild(el('i','cx-on s'));st.appendChild(document.createTextNode('Online, dijawab oleh AI'));ht.appendChild(st);hm.appendChild(ht);
+var close=el('button','cx-x','×');close.type='button';close.setAttribute('aria-label','Tutup chatbot');head.appendChild(hm);head.appendChild(close);
+var log=el('div','cx-log');log.setAttribute('aria-live','polite');
+var hello=el('div','cx-hello');hello.appendChild(el('h4','','Ada yang ingin ditanyakan?'));hello.appendChild(el('p','','Tanya soal karya, skripsi, sertifikat, atau cara menghubungi Thufeil.'));
+var grid=el('div','cx-grid');PROMPTS.forEach(function(p){var b=el('button','cx-card');b.type='button';b.appendChild(el('b','',p[0]));b.appendChild(el('span','','→'));b.addEventListener('click',function(){submit(p[1])});grid.appendChild(b)});hello.appendChild(grid);log.appendChild(hello);
+var form=el('form','cx-form'),inp=el('input');inp.placeholder='Tulis pertanyaan Anda';inp.setAttribute('aria-label','Pertanyaan');inp.autocomplete='off';inp.maxLength=500;
+var send=el('button','cx-send','↑');send.type='submit';send.setAttribute('aria-label','Kirim');form.appendChild(inp);form.appendChild(send);
+var note=el('p','cx-note','Jawaban dibuat oleh AI dan bisa keliru. Untuk hal penting, hubungi langsung.');
+[head,log,form,note].forEach(function(n){inn.appendChild(n)});box.appendChild(inn);
+document.body.appendChild(fab);document.body.appendChild(tip);document.body.appendChild(box);
+function row(role){var r=el('div','cx-row '+(role==='user'?'u':'b'));if(role!=='user')r.appendChild(pic('cx-ava xs'));var m=el('div','cx-msg');r.appendChild(m);log.appendChild(r);log.scrollTop=log.scrollHeight;return m}
+function reveal(node,text){
+ if(reduce||text.length>900){node.textContent=text;log.scrollTop=log.scrollHeight;return Promise.resolve()}
+ var w=text.split(/(\s+)/),i=0,step=Math.max(2,Math.ceil(w.length/60))*2;
+ return new Promise(function(res){var t=setInterval(function(){i+=step;node.textContent=w.slice(0,i).join('');log.scrollTop=log.scrollHeight;if(i>=w.length){clearInterval(t);node.textContent=text;res()}},26)})}
+function submit(text){text=(text||'').trim();if(!text||busy)return;busy=true;if(hello.parentNode)hello.remove();
+ row('user').textContent=text;hist.push({role:'user',text:text});
+ var d=row('bot');d.classList.add('dots');for(var k=0;k<3;k++)d.appendChild(el('i'));log.scrollTop=log.scrollHeight;
+ ask(text).then(function(r){d.classList.remove('dots');d.textContent='';hist.push({role:'bot',text:r});if(window.sfxBeep)window.sfxBeep(880,.08);return reveal(d,r)})
+ .catch(function(){d.classList.remove('dots');d.textContent='Maaf, chatbot sedang tidak bisa dijangkau. Coba lagi sebentar.'}).then(function(){busy=false;inp.focus()})}
 form.addEventListener('submit',function(e){e.preventDefault();var v=inp.value;inp.value='';submit(v)});
-function toggle(s){box.hidden=!s;open.hidden=s;if(s)inp.focus();else open.focus()}
-open.addEventListener('click',function(){toggle(true)});close.addEventListener('click',function(){toggle(false)});
+function toggle(s){box.hidden=!s;fab.hidden=s;tip.hidden=true;if(s){inp.focus()}else fab.focus()}
+fab.addEventListener('click',function(){toggle(true)});close.addEventListener('click',function(){toggle(false)});tip.addEventListener('click',function(){toggle(true)});
 box.addEventListener('keydown',function(e){if(e.key==='Escape')toggle(false)});
+setTimeout(function(){if(box.hidden&&!tipShown){tipShown=true;tip.hidden=false;setTimeout(function(){tip.hidden=true},9000)}},4500);
 })();
