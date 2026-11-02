@@ -487,11 +487,36 @@ form.addEventListener('submit',function(e){
   submit(v);
 });
 
+var closing = false;
+
 function toggle(s){
-  box.hidden=!s;
-  fab.hidden=s;
-  tip.hidden=true;
-  if(s){inp.focus()}else fab.focus();
+  if(closing) return;
+  if(s){
+    box.hidden = false;
+    box.classList.remove('closing');
+    fab.hidden = true;
+    tip.hidden = true;
+    inp.focus();
+  } else {
+    if(box.hidden) return;
+    if(reduce){
+      box.hidden = true;
+      fab.hidden = false;
+      tip.hidden = true;
+      fab.focus();
+      return;
+    }
+    closing = true;
+    box.classList.add('closing');
+    fab.hidden = false;
+    tip.hidden = true;
+    setTimeout(function(){
+      box.hidden = true;
+      box.classList.remove('closing');
+      closing = false;
+      fab.focus();
+    }, 280);
+  }
 }
 
 fab.addEventListener('click',function(){toggle(true)});
