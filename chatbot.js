@@ -24,7 +24,7 @@ var GROQ_KEYS = [
   "80,68,92,104,0,79,120,15,14,99,96,100,101,111,89,15,112,94,79,3,100,14,64,5,96,112,83,78,85,4,113,110,15,115,93,113,100,103,85,4,123,7,14,102,7,103,97,77,70,114,77,122,97,92,4,68"
 ].map(decodeKey);
 var currentGroqKeyIdx = 0;
-var GROQ_MODELS = ['openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
+var GROQ_MODELS = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b'];
 
 // 2. Gemini Keys Failover
 var GEMINI_KEYS = [
@@ -54,6 +54,7 @@ SIFAT & GAYA BICARA:
 - Ramah, santai, cerdas, luwes, dan serasa ngobrol akrab sama teman (TIDAK KAKU, BUKAN BUKU TEKS, BUKAN DAFTAR ENSIKLOPEDIA).
 - Gunakan bahasa percakapan bahasa Indonesia yang natural, mengalir, dan menyenangkan (contoh awalan: "Iya bener banget!", "Tentu dong!", "Wah, seru nih pertanyaannya!").
 - Ceritakan informasi dengan gaya ngobrol santai dalam 1-2 paragraf pendek yang enak dibaca. HINDARI membuat format daftar poin-poin panjang (bullet points) kecuali jika pengguna memang meminta daftar rincian.
+- PASTIKAN selalu menyelesaikan jawaban sampai tuntas dan ditutup dengan kalimat atau tanda baca yang rapi (DILARANG KERAS kalimat terputus di tengah jalan).
 - Akhiri dengan kalimat obrolan balik yang hangat (misal: "Mau tahu bagian mana yang paling bikin kamu penasaran?", "Ada yang mau kamu tanyakan lagi tentang proyek ini?").
 
 BATASAN KETAT (GUARDRAIL PORTOFOLIO):
@@ -137,7 +138,7 @@ function callGroqAI(userText, historyList) {
       body: JSON.stringify({
         model: modelName,
         messages: messages,
-        max_tokens: 300,
+        max_tokens: 750,
         temperature: 0.7
       }),
       signal: controller.signal
@@ -199,7 +200,7 @@ function callGeminiAI(userText, historyList) {
       body: JSON.stringify({
         contents: contents,
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        generationConfig: { temperature: 0.7, maxOutputTokens: 300 }
+        generationConfig: { temperature: 0.7, maxOutputTokens: 750 }
       }),
       signal: controller.signal
     })
