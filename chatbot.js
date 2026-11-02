@@ -50,12 +50,15 @@ var hist = [], busy = false, tipShown = false, reduce = matchMedia('(prefers-red
 // ===== SYSTEM PROMPT & STRICT GUARDRAILS =====
 var SYSTEM_PROMPT = `Kamu adalah "Asisten Thufeil", AI resmi yang mewakili portofolio profesional Muhammad Thufeil Putrayama.
 
-SIFAT & GAYA BICARA:
-- Ramah, santai, cerdas, luwes, dan serasa ngobrol akrab sama teman (TIDAK KAKU, BUKAN BUKU TEKS, BUKAN DAFTAR ENSIKLOPEDIA).
-- Gunakan bahasa percakapan bahasa Indonesia yang natural, mengalir, dan menyenangkan (contoh awalan: "Iya bener banget!", "Tentu dong!", "Wah, seru nih pertanyaannya!").
-- Ceritakan informasi dengan gaya ngobrol santai dalam 1-2 paragraf pendek yang enak dibaca. HINDARI membuat format daftar poin-poin panjang (bullet points) kecuali jika pengguna memang meminta daftar rincian.
+SIFAT, GAYA BICARA & STRUKTUR TAMPILAN:
+- Ramah, santai, cerdas, luwes, dan serasa ngobrol akrab sama teman (TIDAK KAKU, BUKAN BUKU TEKS).
+- JANGAN menulis satu bongkahan paragraf panjang yang padat (bikin orang bosan dan malas membaca).
+- Buat tampilan yang SANGAT RAPI, BERSIH, dan MEMIKAT:
+  1. Mulai dengan 1-2 baris kalimat pembuka yang ramah, hangat, dan to-the-point.
+  2. Saat menjelaskan keahlian, proyek, atau pengalaman, gunakan poin bernomor (1., 2., 3., dst) dengan judul tebal (**Judul Singkat**) di tiap poin, diikuti 1-2 kalimat penjelasan padat dan seru.
+  3. Berikan jeda baris kosong antar-poin agar teks lega dan enak dipindai (scannable) oleh mata pembaca.
+  4. Tutup dengan 1 kalimat obrolan santai yang hangat (misal: "Mau tahu bagian mana yang paling bikin kamu penasaran?", "Ada proyek tertentu yang pengen kamu kepoin lebih dalam?").
 - PASTIKAN selalu menyelesaikan jawaban sampai tuntas dan ditutup dengan kalimat atau tanda baca yang rapi (DILARANG KERAS kalimat terputus di tengah jalan).
-- Akhiri dengan kalimat obrolan balik yang hangat (misal: "Mau tahu bagian mana yang paling bikin kamu penasaran?", "Ada yang mau kamu tanyakan lagi tentang proyek ini?").
 
 BATASAN KETAT (GUARDRAIL PORTOFOLIO):
 - Kamu HANYA dan MUTLAK boleh membahas profil, karya, skripsi, proyek, keterampilan, pendidikan, dan kontak Muhammad Thufeil Putrayama.
@@ -192,7 +195,7 @@ function callGeminiAI(userText, historyList) {
     var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent?key=' + apiKey;
 
     var controller = new AbortController();
-    var timer = setTimeout(function() { controller.abort(); }, 3000); // Timeout cepat 3s
+    var timer = setTimeout(function() { controller.abort(); }, 5500); // Timeout 5.5s untuk Gemini Live
 
     return fetch(url, {
       method: 'POST',
@@ -310,7 +313,7 @@ function fallbackConversationalAnswer(rawQuery) {
     'Kira-kira kamu paling tertarik kepoin proyek yang mana nih?';
 }
 
-// ===== INTEGRASI ASK() ULTRA-FAST HYBRID =====
+// ===== INTEGRASI ASK() HYBRID (PRIORITAS 1: GOOGLE GEMINI AI) =====
 function ask(msg) {
   if (typeof window.PortfolioChat.handler === 'function') {
     try {
@@ -318,15 +321,15 @@ function ask(msg) {
     } catch(e) {}
   }
 
-  // Prioritas 1: Groq Ultra-Fast LPU (< 1s)
-  return callGroqAI(msg, hist)
-    .catch(function(groqErr) {
-      console.warn('Groq failover to Gemini:', groqErr.message);
-      // Prioritas 2: Gemini Live AI
-      return callGeminiAI(msg, hist);
-    })
+  // Prioritas 1: Google Gemini Live AI (gemini-3.5-flash-lite)
+  return callGeminiAI(msg, hist)
     .catch(function(geminiErr) {
-      console.warn('AI APIs failover to Local Conversational Engine:', geminiErr.message);
+      console.warn('Gemini failover to Groq LPU:', geminiErr.message);
+      // Prioritas 2: Groq LPU (Ultra-Fast failover jika Gemini sibuk)
+      return callGroqAI(msg, hist);
+    })
+    .catch(function(groqErr) {
+      console.warn('AI APIs failover to Local Conversational Engine:', groqErr.message);
       // Prioritas 3: Local Engine (Instant 0ms)
       return fallbackConversationalAnswer(msg);
     });
@@ -334,6 +337,58 @@ function ask(msg) {
 
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function pic(cls){var w=el('span',cls),i=el('img');i.src=AVATAR;i.alt='';i.width=48;i.height=48;w.appendChild(i);return w}
+
+// Renderer Markdown ke Kartu & Tipografi Cantik (Menghilangkan Tanda Asterik *)
+function escapeHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderChatMarkdown(raw) {
+  if (!raw) return '';
+  var text = escapeHtml(raw.trim());
+
+  // 1. Tautan URL otomatis clickable
+  text = text.replace(/(https?:\/\/[^\s<]+)/g, '<a class="cx-link" href="$1" target="_blank" rel="noopener">$1</a>');
+
+  // 2. Bold & Italic (hapus tanda bintang dan ubah ke styling bersih)
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="cx-hi">$1</strong>');
+  text = text.replace(/\*([^*\n]+)\*/g, '<em class="cx-em">$1</em>');
+
+  // 3. Render per baris ke format kartu interaktif atau paragraf lega
+  var lines = text.split('\n');
+  var html = '';
+  var inList = false;
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (!line) {
+      if (inList) { html += '</div>'; inList = false; }
+      continue;
+    }
+
+    // Numbered list: 1. Judul: deskripsi
+    var numMatch = line.match(/^(\d+)[\.\)]\s+(.*)/);
+    if (numMatch) {
+      if (!inList) { html += '<div class="cx-card-list">'; inList = true; }
+      html += '<div class="cx-item"><span class="cx-num">' + numMatch[1] + '</span><div class="cx-desc">' + numMatch[2] + '</div></div>';
+      continue;
+    }
+
+    // Bullet list: - deskripsi atau • deskripsi
+    var bulletMatch = line.match(/^[-•*]\s+(.*)/);
+    if (bulletMatch) {
+      if (!inList) { html += '<div class="cx-card-list">'; inList = true; }
+      html += '<div class="cx-item"><span class="cx-bullet">✦</span><div class="cx-desc">' + bulletMatch[1] + '</div></div>';
+      continue;
+    }
+
+    if (inList) { html += '</div>'; inList = false; }
+    html += '<p class="cx-p">' + line + '</p>';
+  }
+
+  if (inList) { html += '</div>'; }
+  return html;
+}
 
 // Peluncur
 var fab=el('button','cx-fab');fab.type='button';fab.setAttribute('aria-haspopup','dialog');
@@ -344,7 +399,7 @@ var tip=el('button','cx-tip','Ada yang mau ditanyakan tentang karya Thufeil? Tan
 // Dialog panel
 var box=el('section','cx');box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-label','AI portofolio');
 var inn=el('div','cx-in'),head=el('header','cx-head');
-var hm=el('div','cx-who');hm.appendChild(pic('cx-ava sm'));var ht=el('div');ht.appendChild(el('b','','Asisten Thufeil'));var st=el('small');st.appendChild(el('i','cx-on s'));st.appendChild(document.createTextNode('Online • AI Portofolio Guide'));ht.appendChild(st);hm.appendChild(ht);
+var hm=el('div','cx-who');hm.appendChild(pic('cx-ava sm'));var ht=el('div');ht.appendChild(el('b','','Asisten Thufeil'));var st=el('small');st.appendChild(el('i','cx-on s'));st.appendChild(document.createTextNode('Online • Google Gemini AI'));ht.appendChild(st);hm.appendChild(ht);
 var close=el('button','cx-x','×');close.type='button';close.setAttribute('aria-label','Tutup chatbot');head.appendChild(hm);head.appendChild(close);
 var log=el('div','cx-log');log.setAttribute('aria-live','polite');
 var hello=el('div','cx-hello');hello.appendChild(el('h4','','Halo! Ada yang ingin diobrolkan?'));hello.appendChild(el('p','','Tanya apa saja seputar karya, skripsi RAG, UI/UX di Figma, video YouTube, atau kontak Thufeil.'));
@@ -359,7 +414,7 @@ PROMPTS.forEach(function(p){
 hello.appendChild(grid);log.appendChild(hello);
 var form=el('form','cx-form'),inp=el('input');inp.placeholder='Tulis pertanyaan Anda di sini...';inp.setAttribute('aria-label','Pertanyaan');inp.autocomplete='off';inp.maxLength=500;
 var send=el('button','cx-send','↑');send.type='submit';send.setAttribute('aria-label','Kirim');form.appendChild(inp);form.appendChild(send);
-var note=el('p','cx-note','Didukung AI LPU & Portofolio Knowledge • Khusus karya Muhammad Thufeil Putrayama.');
+var note=el('p','cx-note','Didukung Google Gemini AI • Khusus menjawab seputar karya Muhammad Thufeil Putrayama.');
 [head,log,form,note].forEach(function(n){inn.appendChild(n)});box.appendChild(inn);
 document.body.appendChild(fab);document.body.appendChild(tip);document.body.appendChild(box);
 
@@ -372,10 +427,10 @@ function row(role){
   return m;
 }
 
-// Reveal animasi mengetik super mulus & cepat (tidak bikin bosan menunggu)
+// Reveal animasi mengetik super mulus & render kartu HTML bersih bebas asterik
 function reveal(node,text){
-  if(reduce||text.length>1000){
-    node.textContent=text;
+  if(reduce||text.length>1200){
+    node.innerHTML=renderChatMarkdown(text);
     log.scrollTop=log.scrollHeight;
     return Promise.resolve();
   }
@@ -383,14 +438,15 @@ function reveal(node,text){
   return new Promise(function(res){
     var t=setInterval(function(){
       i+=step;
-      node.textContent=w.slice(0,i).join('');
+      node.textContent=w.slice(0,i).join('').replace(/[*#_~`]/g,'');
       log.scrollTop=log.scrollHeight;
       if(i>=w.length){
         clearInterval(t);
-        node.textContent=text;
+        node.innerHTML=renderChatMarkdown(text);
+        log.scrollTop=log.scrollHeight;
         res();
       }
-    }, 12); // Kecepatan tinggi 12ms per batch
+    }, 12);
   });
 }
 

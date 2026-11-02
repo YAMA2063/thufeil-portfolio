@@ -546,9 +546,24 @@ dialog.vpop::backdrop{background:rgba(10,22,48,.88);backdrop-filter:blur(8px)}
 .cx-row{display:flex;align-items:flex-end;gap:.5rem;animation:msgin .4s cubic-bezier(.3,1.4,.5,1) both}
 .cx-row.u{justify-content:flex-end}
 @keyframes msgin{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
-.cx-msg{max-width:82%;padding:.65rem .9rem;font:400 .98rem/1.45 var(--b);white-space:pre-wrap;overflow-wrap:anywhere}
-.cx-row.b .cx-msg{background:#111a33;border:1px solid rgba(255,255,255,.1);border-radius:18px 18px 18px 5px;color:#e8eefc}
-.cx-row.u .cx-msg{background:linear-gradient(135deg,var(--blue),#6d3fd1);border-radius:18px 18px 5px 18px;color:#fff}
+.cx-msg{max-width:85%;padding:.75rem 1rem;font:400 .95rem/1.55 var(--b);overflow-wrap:anywhere}
+.cx-row.b .cx-msg{background:linear-gradient(165deg,#101a36 0%,#0c142b 100%);border:1px solid rgba(255,255,255,.12);border-radius:20px 20px 20px 6px;color:#e6edf8;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.cx-row.u .cx-msg{background:linear-gradient(135deg,var(--blue),#6d3fd1);border-radius:20px 20px 6px 20px;color:#fff;white-space:pre-wrap}
+
+/* Format Tipografi Kaya Pesan Chatbot */
+.cx-msg .cx-p{margin:0 0 .55rem 0;line-height:1.55}
+.cx-msg .cx-p:last-child{margin-bottom:0}
+.cx-card-list{display:flex;flex-direction:column;gap:.45rem;margin:.55rem 0}
+.cx-item{display:flex;align-items:flex-start;gap:.6rem;padding:.5rem .7rem;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:background .2s}
+.cx-item:hover{background:rgba(255,255,255,.07)}
+.cx-num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:1.35rem;height:1.35rem;border-radius:50%;background:linear-gradient(135deg,var(--heat),var(--sun));color:#05070d;font:800 .75rem/1 var(--d);margin-top:.15rem}
+.cx-bullet{flex:none;color:var(--sun);font-size:.8rem;margin-top:.1rem}
+.cx-desc{flex:1;font:400 .92rem/1.45 var(--b);color:#d5e0f5}
+.cx-desc strong, .cx-hi{color:var(--sun);font-weight:700}
+.cx-em{font-style:italic;color:#7ff0d4}
+.cx-link{color:var(--sun);text-decoration:underline;text-underline-offset:2px;font-weight:600;transition:opacity .2s}
+.cx-link:hover{opacity:.8}
+
 .cx-msg.dots{display:flex;gap:.3rem;padding:.9rem 1rem}.cx-msg.dots i{width:.5rem;height:.5rem;border-radius:50%;background:linear-gradient(135deg,var(--heat),var(--sun));animation:bnc 1s infinite}
 .cx-msg.dots i:nth-child(2){animation-delay:.15s}.cx-msg.dots i:nth-child(3){animation-delay:.3s}
 @keyframes bnc{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-.35rem);opacity:1}}
