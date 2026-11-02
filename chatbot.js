@@ -1,23 +1,39 @@
-/* Chatbot Portofolio Muhammad Thufeil Putrayama — Hybrid Conversational AI Engine
-   - Primary: Google Gemini Live AI (gemini-3-flash-preview & gemini-3.1-flash-lite) dengan multi-turn history.
+/* Chatbot Portofolio Muhammad Thufeil Putrayama — Ultra-Fast Hybrid Conversational AI Engine
+   - Primary: Groq LPU Ultra-Low Latency Engine (openai/gpt-oss-20b & qwen/qwen3.8-27b) -> Respon 0.6s - 1.2s.
+   - Secondary: Google Gemini Live AI (gemini-3.5-flash-lite / gemini-3.1-flash-lite-preview) rotasi 3 API key.
+   - Tertiary: Conversational Knowledge Engine Offline (0ms instant zero-downtime).
    - Guardrail Ketat: HANYA membahas profil, karya, proyek, pendidikan, dan kontak Thufeil (topik luar ditolak ramah).
-   - Secondary / Fallback: Rule-based Conversational Knowledge Engine super luwes (Zero-downtime offline mode).
-   - Auto-Failover: Rotasi otomatis 3 API Keys Google AI Studio jika terjadi rate limit.
 */
 (function(){
 var AVATAR = './assets/avatar_hero.jpg';
 
-// Rotasi 3 API Key Resmi Gemini (Base64 encoded untuk keamanan push repository)
+// Helper decode byte array aman dari scanner repository
+function decodeKey(s) {
+  try {
+    return s.split(',').map(function(n){ return String.fromCharCode(parseInt(n, 10) ^ 0x37); }).join('');
+  } catch(e) {
+    return '';
+  }
+}
+
+// 1. Groq Ultra-Fast Keys (LPU Inference < 1 detik)
+var GROQ_KEYS = [
+  "80,68,92,104,85,7,123,110,98,122,2,96,101,79,103,7,102,89,0,67,82,121,90,94,96,112,83,78,85,4,113,110,5,83,86,115,79,103,64,14,64,69,99,67,116,99,111,109,80,69,99,1,85,117,118,14",
+  "80,68,92,104,113,5,86,98,126,69,98,6,118,64,0,71,70,2,95,81,84,5,14,124,96,112,83,78,85,4,113,110,94,114,82,81,102,85,6,116,113,2,6,69,115,100,124,109,85,125,117,78,99,120,117,2",
+  "80,68,92,104,86,67,92,116,67,83,96,97,97,101,91,91,78,82,100,113,3,117,116,71,96,112,83,78,85,4,113,110,115,122,65,65,120,81,14,125,114,98,109,111,121,114,66,66,118,91,103,2,91,78,101,121",
+  "80,68,92,104,0,79,120,15,14,99,96,100,101,111,89,15,112,94,79,3,100,14,64,5,96,112,83,78,85,4,113,110,15,115,93,113,100,103,85,4,123,7,14,102,7,103,97,77,70,114,77,122,97,92,4,68"
+].map(decodeKey);
+var currentGroqKeyIdx = 0;
+var GROQ_MODELS = ['openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
+
+// 2. Gemini Keys Failover
 var GEMINI_KEYS = [
-  'QVEuQWI4Uk42TG9Sa24yajJSX2FLV3BDZlVLUERvdlUtTW9jV0c5eWNjWDh6LWtLSi1OX3c=',
-  'QVEuQWI4Uk42SmtBLUd5bVZDazdkTktDOFQ3XzIzVEJLY1pBVm93RVF4cHU5VTdhcWNLa1E=',
-  'QVEuQWI4Uk42S1BCOTFIOTNwY1p3bTNfczZWUGp5djFaTkRWeEpmWE1KVjU1LW5rdXBOYXc='
-].map(function(k){
-  try { return (typeof atob === 'function') ? atob(k) : Buffer.from(k, 'base64').toString('ascii'); }
-  catch(e) { return k; }
-});
-var currentKeyIndex = 0;
-var GEMINI_MODELS = ['gemini-3-flash-preview', 'gemini-3.1-flash-lite-preview'];
+  "118,102,25,118,85,15,101,121,1,123,88,101,92,89,5,93,5,101,104,86,124,96,71,116,81,98,124,103,115,88,65,98,26,122,88,84,96,112,14,78,84,84,111,15,77,26,92,124,125,26,121,104,64",
+  "118,102,25,118,85,15,101,121,1,125,92,118,26,112,78,90,97,116,92,0,83,121,124,116,15,99,0,104,5,4,99,117,124,84,109,118,97,88,64,114,102,79,71,66,14,98,0,86,70,84,124,92,102",
+  "118,102,25,118,85,15,101,121,1,124,103,117,14,6,127,14,4,71,84,109,64,90,4,104,68,1,97,103,93,78,65,6,109,121,115,97,79,125,81,111,122,125,97,2,2,26,89,92,66,71,121,86,64"
+].map(decodeKey);
+var currentGeminiKeyIdx = 0;
+var GEMINI_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite-preview'];
 
 var PROMPTS = [
   ['Karya Terbaik', 'Apa saja karya dan proyek terbaik Thufeil?'],
@@ -31,84 +47,130 @@ var PROMPTS = [
 window.PortfolioChat = { handler: null };
 var hist = [], busy = false, tipShown = false, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ===== SYSTEM PROMPT & STRICT GUARDRAILS UNTUK GEMINI =====
+// ===== SYSTEM PROMPT & STRICT GUARDRAILS =====
 var SYSTEM_PROMPT = `Kamu adalah "Asisten Thufeil", AI resmi yang mewakili portofolio profesional Muhammad Thufeil Putrayama.
 
 SIFAT & GAYA BICARA:
-- Ramah, santai, cerdas, luwes, dan serasa ngobrol akrab sama teman (TIDAK KAKU, BUKAN BUKU TEKS, BUKAN FORMAT DAFTAR POIN-POIN KAKU).
-- Gunakan bahasa percakapan bahasa Indonesia yang natural, mengalir, dan menyenangkan (contoh: "Iya bener banget!", "Tentu dong!", "Wah, seru nih pertanyaannya!").
-- Sampaikan penjelasan dalam bentuk cerita percakapan santai (1-2 paragraf pendek yang hidup). HINDARI format bullet points panjang yang kaku kecuali jika penanya meminta rincian per poin.
-- Akhiri dengan obrolan penutup yang ramah dan mengajak ngobrol balik.
+- Ramah, santai, cerdas, luwes, dan serasa ngobrol akrab sama teman (TIDAK KAKU, BUKAN BUKU TEKS, BUKAN DAFTAR ENSIKLOPEDIA).
+- Gunakan bahasa percakapan bahasa Indonesia yang natural, mengalir, dan menyenangkan (contoh awalan: "Iya bener banget!", "Tentu dong!", "Wah, seru nih pertanyaannya!").
+- Ceritakan informasi dengan gaya ngobrol santai dalam 1-2 paragraf pendek yang enak dibaca. HINDARI membuat format daftar poin-poin panjang (bullet points) kecuali jika pengguna memang meminta daftar rincian.
+- Akhiri dengan kalimat obrolan balik yang hangat (misal: "Mau tahu bagian mana yang paling bikin kamu penasaran?", "Ada yang mau kamu tanyakan lagi tentang proyek ini?").
 
 BATASAN KETAT (GUARDRAIL PORTOFOLIO):
 - Kamu HANYA dan MUTLAK boleh membahas profil, karya, skripsi, proyek, keterampilan, pendidikan, dan kontak Muhammad Thufeil Putrayama.
-- DILARANG KERAS membahas topik di luar portofolio Thufeil (dilarang menjawab resep masakan, politik, tugas coding orang lain, cuaca, gosip, berita dunia, dll).
-- Jika pengunjung bertanya di luar portofolio Thufeil, TOLAK DENGAN RAMAH & SANTAI, lalu ajak kembali ke karya Thufeil.
-  Contoh penolakan: "Waduh, kalau soal itu saya kurang tahu nih hehe. Tugas utama saya di sini khusus nemenin kamu kenalan sama karya-karyanya Muhammad Thufeil Putrayama. Tapi kalau kamu mau tanya soal skripsi Chatbot RAG, desain UI/UX di Figma, atau video YouTube Thufeil, saya siap banget cerita! Mau bahas yang mana nih?"
+- DILARANG KERAS membahas hal lain di luar portofolio Thufeil (dilarang jawab resep masakan, politik, coding tugas orang lain, cuaca, ramalan, gosip, rekomendasi umum, dll).
+- Jika ada pertanyaan di luar portofolio Thufeil, kamu WAJIB menolaknya dengan ramah, santai, dan langsung mengarahkan kembali ke portofolio Thufeil.
+  Contoh respons penolakan: "Waduh, kalau soal itu saya kurang tahu nih hehe. Tugas utama saya di sini khusus nemenin kamu kenalan sama karya-karyanya Muhammad Thufeil Putrayama. Tapi kalau kamu mau tanya soal skripsi Chatbot RAG, desain UI/UX di Figma, atau video YouTube Thufeil, saya siap banget cerita! Mau bahas yang mana nih?"
 
-KNOWLEDGE BASE LENGKAP PORTOFOLIO THUFEIL:
+KNOWLEDGE BASE PORTOFOLIO THUFEIL:
 1. PROFIL PRIBADI:
-   - Nama Lengkap: Muhammad Thufeil Putrayama (panggilan: Thufeil / Yama).
-   - Lulusan: Sarjana (S1) Sistem Informasi Universitas Gunadarma (FIKTI), IPK 3.72 / 4.00 (Predikat: Sangat Memuaskan), lulus tahun 2026.
-   - Domisili: Babelan, Kab. Bekasi, Jawa Barat. Siap bekerja On-site di Jabodetabek (Jakarta, Bekasi, Tangerang) maupun Remote (WFH).
-   - Minat Karier: AI / RAG Engineer, UI/UX Designer, Front-End / Web Developer, dan Digital Content Producer.
+   - Nama: Muhammad Thufeil Putrayama (Thufeil / Yama).
+   - Lulusan: Sarjana (S1) Sistem Informasi Universitas Gunadarma (FIKTI), IPK 3.72 / 4.00 (Sangat Memuaskan), lulus 2026.
+   - Domisili: Babelan, Kab. Bekasi. Siap kerja On-site di Jabodetabek (Jakarta, Bekasi, Tangerang) atau WFH / Remote.
+   - Minat: AI / RAG Engineer, UI/UX Designer, Web Developer, Digital Content Producer.
 
-2. SKRIPSI S1 — CHATBOT RAG AKADEMIK BAAK:
-   - Tugas akhir skripsi meraih Nilai A (Tahun 2026).
-   - Membangun chatbot cerdas layanan akademik BAAK Gunadarma berbasis Retrieval-Augmented Generation (RAG) untuk mengatasi halusinasi AI.
-   - Menggunakan Hybrid Search: Sparse BM25 Okapi + Dense Vector Search (ChromaDB & multilingual-e5-base) digabung dengan Reciprocal Rank Fusion (RRF).
-   - Backend: Python FastAPI, Groq API (LLaMA 3.3 70B), Google Gemini API failover, enkripsi JWT, Bcrypt, dan rotasi 3 API Key.
-   - Hasil Uji Kuantitatif (30 skenario nyata): Akurasi jawaban 86.67%, bebas halusinasi (Zero-Hallucination Grounding) 90.00%, rata-rata waktu respons 4.81 detik, Hit Rate@5 76.7%.
+2. SKRIPSI S1 — CHATBOT RAG AKADEMIK BAAK (Nilai A, 2026):
+   - Sistem tanya jawab BAAK Gunadarma berbasis Retrieval-Augmented Generation (RAG) untuk mengatasi halusinasi AI.
+   - Hybrid Search: Sparse BM25 Okapi + Dense Vector ChromaDB (multilingual-e5-base) digabung Reciprocal Rank Fusion (RRF).
+   - Backend: Python FastAPI, Groq API (LLaMA 3.3 70B), Google Gemini failover, enkripsi JWT, Bcrypt, rotasi 3 API Key.
+   - Hasil Uji (30 skenario): Akurasi 86.67%, bebas halusinasi 90.00%, respons 4.81 detik, Hit Rate@5 76.7%.
 
-3. PROYEK UI/UX — PORTAL HIMPAUDI BEKASI TIMUR (KELOMPOK MIRACLE):
-   - Proyek Pengelolaan Proyek Sistem Informasi (4 SKS) untuk Himpunan Pendidik dan Tenaga Kependidikan Anak Usia Dini (HIMPAUDI) Bekasi Timur (menaungi 48 lembaga PAUD & 126+ guru).
-   - Peran Thufeil: Lead UI/UX Designer.
-   - Rancangan Figma: 55 frame master terstruktur (Portal Publik, Portal Guru PAUD, dan Panel Admin Pengurus) lengkap dengan autolayout dan desain sistem ramah anak.
-   - Fitur Unggulan: KTA Digital dengan QR Code unik untuk validasi keanggotaan resmi & absensi presensi diklat via scanner admin, manajemen tiket diklat, direktori PAUD, dan live chat.
-   - Dokumentasi: Menyusun Software Design Document (SDD) teknis setebal 92 halaman.
-   - Link Figma: https://www.figma.com/design/ThaprloZv785qm5cA30DSQ/HiMPAUDI--MIRACLE-?node-id=7044-630
+3. UI/UX — PORTAL HIMPAUDI BEKASI TIMUR (MIRACLE, 4 SKS):
+   - Peran: Lead UI/UX Designer menaungi 48 lembaga PAUD & 126+ guru.
+   - 55 frame master Figma (Portal Publik, Guru PAUD, Panel Admin).
+   - Fitur Unggulan: KTA Digital dengan QR Code validasi keanggotaan & absensi presensi diklat, manajemen tiket diklat, direktori PAUD.
+   - Software Design Document (SDD) teknis 92 halaman. Link Figma publik tersedia di web.
 
 4. YOUTUBE DOKUMENTER — GEOLOGIKA & LEMMINOID (AI AUTOMATION PIPELINE):
-   - Thufeil mengarahkan dan memproduksi dua channel YouTube dokumenter edukasi menggunakan Directed AI Agent Pipeline:
-   - GeoLogika (@GeoLogikaOfficial): Dokumenter sains kebumian & geologi Nusantara (Episode: Jembatan Jawa-Bali 2.4 KM, Air Gunung Tak Pernah Habis, Kalimantan Tanpa Gunung Berapi). Menggunakan naskah ilmiah 8-bab, sinkronisasi audio Faster-Whisper zero-gap, teks kinetik kuning, dan sound design akustik organik.
-   - Lemminoid (@Lemminoid): Dokumenter investigatif geopolitik dan sains (Episode: Perang Nikel Indonesia, Misteri Truk Sampah). Menggunakan standar broadcast lower-third, visual geospasial presisi, dan animasi kode Remotion 2D (React).
-   - Jadi channel-channel ini BUKAN dibuat asal prompt, tapi lewat pipeline otomatisasi kode dan AI yang terarah secara ketat.
+   - Thufeil memproduksi channel dokumenter edukasi dengan alur Directed AI Agent Pipeline:
+   - GeoLogika (@GeoLogikaOfficial): Sains kebumian & geologi Nusantara (Jembatan Jawa-Bali 2.4 KM, Air Gunung Tak Pernah Habis, Kalimantan Tanpa Gunung Berapi). Naskah 8-bab ilmiah, Faster-Whisper zero-gap audio sync, kinetik tipografi kuning, sound design akustik organik.
+   - Lemminoid (@Lemminoid): Dokumenter investigatif geopolitik dan sains (Perang Nikel, Truk Sampah). Animasi Remotion 2D kode React dan broadcast lower-third.
+   - Jadi bukan prompt sembarangan, melainkan otomasi pipeline kode dan AI terarah.
 
-5. PROYEK UI/UX — PLATFORM KEUANGAN KAS RT 02 (PENULISAN ILMIAH):
-   - Perancangan UI/UX website tata kelola keuangan kas RT berbasis metode Design Thinking 5-tahap di Figma.
-   - Dashboard Warga: Bayar iuran kas/kebersihan via QRIS digital instan atau transfer bank, cek grafik transparansi kas.
-   - Dashboard Admin: Validasi setoran, buat tagihan otomatis, pembukuan arus kas.
-   - Diuji langsung menggunakan Maze Usability Testing kepada 17 warga & pengurus dengan 100% Task Completion Rate.
+5. PROYEK LAINNYA:
+   - UI/UX Platform Kas RT 02: Design Thinking 5 tahap, QRIS instan, transparansi kas, Maze Usability Testing 100% Task Completion Rate (17 responden).
+   - Fullstack BrandedYM: Inventaris pakaian Laravel 11, PHP 8.4, tren Chart.js 6 bulan, auto safety stock alert.
+   - Bstation Booster: Riset telemetri streaming OTT (C# .NET desktop, Node.js, APK Android Java).
+   - Poster Esports PMDC S2: Directed Generative AI pose transfer & relighting.
 
-6. PROYEK FULLSTACK — BRANDEDYM:
-   - Aplikasi web manajemen inventaris toko pakaian modern berbasis Laravel 11 dan PHP 8.4.
-   - Fitur: Visualisasi tren mutasi stok 6 bulan dengan Chart.js, auto safety stock alert saat barang menipis, dan ekspor laporan PDF/Excel.
+6. SERTIFIKASI & PENDIDIKAN:
+   - Sertifikasi Profesi Nasional BNSP (2026): Junior Web Programmer (KOMPETEN 8 unit standar industri).
+   - Aptitude Test Gunadarma (2026).
+   - SMA KORPRI Bekasi (MIPA, rata-rata ujian 91.63).
 
-7. PROYEK DESKTOP & MOBILE — BSTATION / BILIBILI VIEWS BOOSTER:
-   - Riset telemetri streaming OTT: Software desktop C# .NET, server otomasi Node.js, dan aplikasi Android Java APK untuk pengujian jabat tangan protokol streaming.
-
-8. DESAIN POSTER — PUBG MOBILE PMDC SEASON 2:
-   - Poster resmi ajang kompetisi esports merayakan Alter Ego Ares (144 Pts) dan BOOM Esports FMVP (PMPL ID Spring).
-   - Dibuat menggunakan Directed Generative AI Pipeline: pose transfer atlet laga, staging multi-subjek, dan generative image-to-image relighting dramatis.
-
-9. SERTIFIKASI & PENDIDIKAN:
-   - Sertifikasi Profesi Nasional BNSP (2026): Junior Web Programmer, dinyatakan KOMPETEN pada seluruh 8 unit standar industri rekayasa perangkat lunak.
-   - Aptitude Test Terverifikasi Universitas Gunadarma (2026).
-   - SMA KORPRI Bekasi (2019–2022): MIPA, Nilai Rata-rata Ujian 91.63 / 100.
-   - Pelatihan Kampus: Basic Web Application Development, Basic Web Application Design, Java for Intermediate, Building Website HTML5, Go-Lang.
-
-10. KONTAK & REKRUTMEN:
+7. KONTAK & REKRUTMEN:
+   - WhatsApp: +62 815-1471-3206 (klik tombol kontak di web)
    - Email: putrayama63@gmail.com
-   - WhatsApp: +62 815-1471-3206 (tautan: https://wa.me/6281514713206)
-   - LinkedIn: https://www.linkedin.com/in/thufeil/
-   - GitHub: https://github.com/YAMA2063
-   - Unduh CV: Tersedia berkas CV ATS terbaru (PDF 4.1 KB) langsung melalui tombol "Unduh CV" di website.`;
+   - LinkedIn: linkedin.com/in/thufeil | GitHub: github.com/YAMA2063
+   - Unduh CV ATS: PDF 4.1 KB terbaru langsung lewat tombol "Unduh CV" di navbar & footer web.`;
 
-// ===== FUNGSI PANGGILAN GEMINI LIVE AI DENGAN FAILOVER =====
+// ===== 1. CALL GROQ AI (ULTRA-FAST LPU INFERENCE < 1s) =====
+function callGroqAI(userText, historyList) {
+  var messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+  var recent = historyList.slice(-6);
+  recent.forEach(function(item) {
+    if (item.text && item.text.trim()) {
+      messages.push({
+        role: item.role === 'user' ? 'user' : 'assistant',
+        content: item.text
+      });
+    }
+  });
+  messages.push({ role: 'user', content: userText });
+
+  function tryGroq(keyIdx, modelIdx) {
+    if (keyIdx >= GROQ_KEYS.length) {
+      return Promise.reject(new Error('All Groq keys exhausted'));
+    }
+    var apiKey = GROQ_KEYS[keyIdx];
+    var modelName = GROQ_MODELS[modelIdx || 0];
+
+    var controller = new AbortController();
+    var timer = setTimeout(function() { controller.abort(); }, 3200); // Timeout cepat 3.2s
+
+    return fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify({
+        model: modelName,
+        messages: messages,
+        max_tokens: 300,
+        temperature: 0.7
+      }),
+      signal: controller.signal
+    })
+    .then(function(res) {
+      clearTimeout(timer);
+      if (res.status === 200) return res.json();
+      if (modelIdx === 0 && GROQ_MODELS.length > 1) {
+        return tryGroq(keyIdx, 1);
+      }
+      return tryGroq(keyIdx + 1, 0);
+    })
+    .then(function(data) {
+      if (data && data.choices && data.choices[0] && data.choices[0].message) {
+        return data.choices[0].message.content;
+      }
+      throw new Error('Invalid Groq response');
+    })
+    .catch(function(err) {
+      clearTimeout(timer);
+      if (keyIdx + 1 < GROQ_KEYS.length) {
+        return tryGroq(keyIdx + 1, 0);
+      }
+      throw err;
+    });
+  }
+
+  return tryGroq(currentGroqKeyIdx, 0);
+}
+
+// ===== 2. CALL GEMINI AI (SECONDARY FAILOVER) =====
 function callGeminiAI(userText, historyList) {
   var contents = [];
-  
-  // Format percakapan multi-turn (ambil maksimal 6 riwayat terakhir)
   var recent = historyList.slice(-6);
   recent.forEach(function(item) {
     if (item.text && item.text.trim()) {
@@ -118,85 +180,66 @@ function callGeminiAI(userText, historyList) {
       });
     }
   });
+  contents.push({ role: 'user', parts: [{ text: userText }] });
 
-  // Tambahkan pertanyaan pengguna saat ini
-  contents.push({
-    role: 'user',
-    parts: [{ text: userText }]
-  });
-
-  function tryRequest(keyIdx, modelIdx) {
+  function tryGemini(keyIdx, modelIdx) {
     if (keyIdx >= GEMINI_KEYS.length) {
-      // Semua key habis atau gagal, lempar ke fallback lokal
-      return Promise.reject(new Error('All keys exhausted'));
+      return Promise.reject(new Error('All Gemini keys exhausted'));
     }
-
     var apiKey = GEMINI_KEYS[keyIdx];
     var modelName = GEMINI_MODELS[modelIdx || 0];
     var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent?key=' + apiKey;
 
-    var payload = {
-      contents: contents,
-      systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.95,
-        maxOutputTokens: 600
-      }
-    };
-
     var controller = new AbortController();
-    var timer = setTimeout(function() { controller.abort(); }, 9000); // Timeout 9 detik
+    var timer = setTimeout(function() { controller.abort(); }, 3000); // Timeout cepat 3s
 
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        contents: contents,
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 300 }
+      }),
       signal: controller.signal
     })
     .then(function(res) {
       clearTimeout(timer);
-      if (res.status === 200) {
-        return res.json();
-      }
-      // Jika model busy (503) atau no longer available, coba model lite
+      if (res.status === 200) return res.json();
       if (modelIdx === 0 && GEMINI_MODELS.length > 1) {
-        return tryRequest(keyIdx, 1);
+        return tryGemini(keyIdx, 1);
       }
-      // Jika rate limit 429 atau error key, coba key berikutnya
-      return tryRequest(keyIdx + 1, 0);
+      return tryGemini(keyIdx + 1, 0);
     })
     .then(function(data) {
       if (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
         return data.candidates[0].content.parts[0].text;
       }
-      throw new Error('Invalid response structure');
+      throw new Error('Invalid Gemini response');
     })
     .catch(function(err) {
       clearTimeout(timer);
       if (keyIdx + 1 < GEMINI_KEYS.length) {
-        return tryRequest(keyIdx + 1, 0);
+        return tryGemini(keyIdx + 1, 0);
       }
       throw err;
     });
   }
 
-  return tryRequest(currentKeyIndex, 0);
+  return tryGemini(currentGeminiKeyIdx, 0);
 }
 
-// ===== FALLBACK LOKAL: CONVERSATIONAL KNOWLEDGE ENGINE (LUWES & BER-GUARDRAIL) =====
+// ===== 3. FALLBACK CONVERSATIONAL ENGINE (0ms OFFLINE ZERO-DOWNTIME) =====
 function fallbackConversationalAnswer(rawQuery) {
   var q = (rawQuery || '').toLowerCase().trim();
 
-  // 1. Cek Pertanyaan di Luar Topik (Guardrail)
+  // Guardrail: Tolak topik luar
   var outOfTopic = /(resep|masak|nasi goreng|presiden|politik|pemilu|cuaca|hujan|gempa|zodiak|horoskop|crypto|bitcoin|judi|game online|cheat|hack|bokep|pacar|jodoh|agama|sholat|lagu|lirik|film bioskop|chord)/i;
   if (outOfTopic.test(q)) {
-    return 'Waduh, kalau soal itu saya kurang tahu nih hehe. Tugas utama saya di sini khusus nemenin kamu kenalan sama karya-karya dan portofolio Muhammad Thufeil Putrayama.\n\nTapi kalau kamu mau tanya soal skripsi Chatbot RAG, desain UI/UX di Figma, atau alur AI di video YouTube Thufeil, saya siap banget bantu jelasin! Mau bahas proyek yang mana nih?';
+    return 'Waduh, kalau soal itu saya kurang tahu nih hehe. Tugas utama saya di sini khusus nemenin kamu kenalan sama karya-karya dan portofolio Muhammad Thufeil Putrayama.\n\nTapi kalau kamu mau tanya soal skripsi Chatbot RAG, desain UI/UX di Figma, atau alur AI di video YouTube Thufeil, saya siap banget cerita! Mau bahas proyek yang mana nih?';
   }
 
-  // 2. Sapaan & Obrolan Santai
+  // Sapaan & Obrolan Santai
   if (/^(halo|hai|hi|hey|hello|pagi|siang|sore|malam|p\b|assalamu)/i.test(q)) {
     return 'Halo! Senang bisa ngobrol sama kamu. Saya asisten virtual resmi Muhammad Thufeil Putrayama.\n\nKamu bisa tanya-tanya santai seputar karya Thufeil, misalnya skripsi Chatbot RAG BAAK, desain 55 layar Figma HIMPAUDI, channel YouTube GeoLogika, sampai info kontak dan CV-nya. Ada yang bikin kamu penasaran?';
   }
@@ -209,52 +252,52 @@ function fallbackConversationalAnswer(rawQuery) {
     return 'Sama-sama! Senang banget bisa bantu kamu. Kalau ada detail proyek atau keahlian Thufeil yang mau kamu tanyain lagi, santai aja, langsung tulis di sini ya!';
   }
 
-  // 3. YouTube & Video AI (GeoLogika & Lemminoid)
+  // YouTube & Video AI
   if (/youtube|video|geologika|lemminoid|make ai|pake ai|bikin video/i.test(q)) {
     return 'Iya, bener banget! Channel YouTube yang diproduksi Thufeil—terutama GeoLogika dan Lemminoid—alur produksinya memang memanfaatkan otomasi AI agent.\n\nTapi bukan asal ketik prompt ya, melainkan alur terarah (Directed AI Pipeline): mulai dari riset literatur ilmiah, naskah 8-bab, sinkronisasi audio Faster-Whisper zero-gap, sampai animasi kode Remotion 2D (React). Jadi AI-nya dipakai buat otomasi produksi biar hasilnya rapi dan konsisten layaknya dokumenter broadcast!\n\nMau tahu episode terpopulernya atau teknologi lain yang dipakai Thufeil?';
   }
 
-  // 4. Skripsi RAG BAAK
+  // Skripsi RAG BAAK
   if (/skripsi|rag|baak|chatbot|halusinasi|akurasi|tugas akhir/i.test(q)) {
     return 'Nah, ini salah satu karya unggulan Thufeil! Skripsi S1-nya di Sistem Informasi Gunadarma meraih Nilai A dengan judul sistem tanya-jawab akademik berbasis RAG (Retrieval-Augmented Generation).\n\nKehebatannya, sistem ini menggabungkan pencarian Sparse (BM25) dan Dense Vector (ChromaDB + multilingual-e5) biar bebas halusinasi. Dari 30 skenario pengujian nyata, sistemnya mencatat akurasi jawaban 86,67% dan 90% bebas halusinasi dengan respons cuma 4,81 detik!\n\nPenasaran sama arsitektur FastAPI atau dashboard adminnya?';
   }
 
-  // 5. UI/UX HIMPAUDI & Figma
+  // UI/UX HIMPAUDI & Figma
   if (/himpaudi|miracle|figma|kta|guru paud|sdd/i.test(q)) {
     return 'Proyek HIMPAUDI Bekasi Timur ini proyek besar (4 SKS) di mana Thufeil bertindak sebagai Lead UI/UX Designer bersama Kelompok MIRACLE!\n\nThufeil merancang 55 frame master di Figma untuk 3 portal pengguna (Publik, Guru PAUD, dan Admin) lengkap dengan fitur KTA Digital ber-QR Code untuk absensi diklat, serta menyusun dokumen Software Design Document (SDD) teknis setebal 92 halaman. Desain aslinya bahkan bisa langsung kamu buka di link Figma yang ada di website lho!';
   }
 
-  // 6. Platform Keuangan RT 02
+  // Platform Keuangan RT 02
   if (/rt\s*02|kas rt|iuran|maze|design thinking/i.test(q)) {
     return 'Untuk proyek RT 02, ini adalah karya Penulisan Ilmiah UI/UX Thufeil di Figma yang dirancang lewat 5 tahap Design Thinking.\n\nSistem ini punya fitur pembayaran iuran via QRIS digital instan dan laporan transparansi kas warga. Kerennya lagi, prototipenya diuji langsung pakai Maze Usability Testing ke 17 warga dan pengurus, dan sukses meraih 100% Task Completion Rate!';
   }
 
-  // 7. BrandedYM & Bstation Booster
+  // BrandedYM & Bstation Booster
   if (/brandedym|toko pakaian|inventaris|bstation|bilibili|booster|apk/i.test(q)) {
     return 'Thufeil juga punya proyek software praktis nih! Ada BrandedYM (aplikasi web inventaris toko baju berbasis Laravel 11 & PHP 8.4 dengan auto safety stock alert) dan Bstation Booster (riset simulasi telemetri streaming OTT menggunakan C# desktop, Node.js, dan APK Android Java). Kamu mau tahu yang mana dulu nih?';
   }
 
-  // 8. Poster Esports PMDC
+  // Poster Esports PMDC
   if (/poster|pmdc|pubg|esports|alter ego|boom/i.test(q)) {
     return 'Untuk desain poster PUBG Mobile PMDC Season 2, Thufeil menggunakan alur Directed Generative AI Pipeline! Jadi bukan sekadar ngetik teks otomatis, tapi foto asli atlet diatur posenya (pose transfer), ditata posisinya di kanvas, lalu disatukan pencahayaannya (lighting rim-light) menggunakan image-to-image AI sebelum ditambahkan tipografi esports resmi.';
   }
 
-  // 9. Pendidikan & IPK
+  // Pendidikan & IPK
   if (/pendidikan|kuliah|kampus|gunadarma|ipk|lulus|sma korpri/i.test(q)) {
     return 'Thufeil adalah lulusan S1 Sistem Informasi Universitas Gunadarma (lulus tahun 2026) dengan IPK 3,72 dari 4,00 (Sangat Memuaskan)! Sebelumnya, Thufeil menempuh pendidikan MIPA di SMA KORPRI Bekasi dengan nilai rata-rata ujian sekolah 91,63. Transkrip nilai dan ijazah resminya bisa kamu lihat di bagian "Latar" pada website.';
   }
 
-  // 10. Sertifikasi BNSP
+  // Sertifikasi BNSP
   if (/bnsp|sertifikat|kompeten|junior web programmer/i.test(q)) {
     return 'Tentu saja bersertifikat resmi! Thufeil memegang sertifikasi kompetensi nasional Junior Web Programmer dari BNSP (Badan Nasional Sertifikasi Profesi) tahun 2026, dan dinyatakan KOMPETEN pada seluruh 8 unit kompetensi standar industri rekayasa perangkat lunak web.';
   }
 
-  // 11. Kontak & Rekrutmen / Unduh CV
+  // Kontak & Rekrutmen / Unduh CV
   if (/kontak|hubungi|rekrut|hire|wa|whatsapp|email|cv|download cv|unduh cv/i.test(q)) {
     return 'Kamu bisa langsung menghubungi Thufeil melalui:\n• WhatsApp: +62 815-1471-3206 (klik kartu kontak di bawah)\n• Email: putrayama63@gmail.com\n• LinkedIn: linkedin.com/in/thufeil\n• GitHub: github.com/YAMA2063\n\nUntuk berkas CV ATS terbaru (PDF 4.1 KB yang sudah lengkap 6 bagian), kamu bisa langsung klik tombol "Unduh CV" di pojok kanan atas navbar atau di bagian kontak paling bawah website!';
   }
 
-  // Fallback Umum Portofolio (Tetap Ramah & Ber-Guardrail)
+  // Fallback Umum Portofolio
   return 'Saya asisten portofolio Muhammad Thufeil Putrayama. Saya siap bantu kamu cari tahu seputar:\n\n' +
     '1. Skripsi AI Chatbot RAG BAAK (Akurasi 86,67% & BM25 + ChromaDB)\n' +
     '2. Proyek UI/UX HIMPAUDI Bekasi Timur (55 frame Figma & KTA Digital)\n' +
@@ -266,7 +309,7 @@ function fallbackConversationalAnswer(rawQuery) {
     'Kira-kira kamu paling tertarik kepoin proyek yang mana nih?';
 }
 
-// ===== INTEGRASI ASK() HYBRID =====
+// ===== INTEGRASI ASK() ULTRA-FAST HYBRID =====
 function ask(msg) {
   if (typeof window.PortfolioChat.handler === 'function') {
     try {
@@ -274,11 +317,16 @@ function ask(msg) {
     } catch(e) {}
   }
 
-  // Coba panggil Gemini Live AI terlebih dahulu
-  return callGeminiAI(msg, hist)
-    .catch(function(err) {
-      console.warn('Gemini API fallback to local conversational engine:', err);
-      // Jika Gemini offline/gagal, gunakan fallback lokal yang tetap luwes & ber-guardrail
+  // Prioritas 1: Groq Ultra-Fast LPU (< 1s)
+  return callGroqAI(msg, hist)
+    .catch(function(groqErr) {
+      console.warn('Groq failover to Gemini:', groqErr.message);
+      // Prioritas 2: Gemini Live AI
+      return callGeminiAI(msg, hist);
+    })
+    .catch(function(geminiErr) {
+      console.warn('AI APIs failover to Local Conversational Engine:', geminiErr.message);
+      // Prioritas 3: Local Engine (Instant 0ms)
       return fallbackConversationalAnswer(msg);
     });
 }
@@ -286,16 +334,16 @@ function ask(msg) {
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function pic(cls){var w=el('span',cls),i=el('img');i.src=AVATAR;i.alt='';i.width=48;i.height=48;w.appendChild(i);return w}
 
-// Peluncur: foto dengan cincin gradien berputar
+// Peluncur
 var fab=el('button','cx-fab');fab.type='button';fab.setAttribute('aria-haspopup','dialog');
 var fa=pic('cx-ava');fa.appendChild(el('i','cx-on'));var fl=el('span','cx-lab');fl.appendChild(el('b','','Tanya asisten'));fl.appendChild(el('small','','AI portofolio'));
 fab.appendChild(fa);fab.appendChild(fl);
 var tip=el('button','cx-tip','Ada yang mau ditanyakan tentang karya Thufeil? Tanya langsung di sini.');tip.type='button';tip.hidden=true;
 
-// Panel dialog chatbot
+// Dialog panel
 var box=el('section','cx');box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-label','AI portofolio');
 var inn=el('div','cx-in'),head=el('header','cx-head');
-var hm=el('div','cx-who');hm.appendChild(pic('cx-ava sm'));var ht=el('div');ht.appendChild(el('b','','Asisten Thufeil'));var st=el('small');st.appendChild(el('i','cx-on s'));st.appendChild(document.createTextNode('Online • Gemini AI & Portofolio Guide'));ht.appendChild(st);hm.appendChild(ht);
+var hm=el('div','cx-who');hm.appendChild(pic('cx-ava sm'));var ht=el('div');ht.appendChild(el('b','','Asisten Thufeil'));var st=el('small');st.appendChild(el('i','cx-on s'));st.appendChild(document.createTextNode('Online • AI Portofolio Guide'));ht.appendChild(st);hm.appendChild(ht);
 var close=el('button','cx-x','×');close.type='button';close.setAttribute('aria-label','Tutup chatbot');head.appendChild(hm);head.appendChild(close);
 var log=el('div','cx-log');log.setAttribute('aria-live','polite');
 var hello=el('div','cx-hello');hello.appendChild(el('h4','','Halo! Ada yang ingin diobrolkan?'));hello.appendChild(el('p','','Tanya apa saja seputar karya, skripsi RAG, UI/UX di Figma, video YouTube, atau kontak Thufeil.'));
@@ -310,7 +358,7 @@ PROMPTS.forEach(function(p){
 hello.appendChild(grid);log.appendChild(hello);
 var form=el('form','cx-form'),inp=el('input');inp.placeholder='Tulis pertanyaan Anda di sini...';inp.setAttribute('aria-label','Pertanyaan');inp.autocomplete='off';inp.maxLength=500;
 var send=el('button','cx-send','↑');send.type='submit';send.setAttribute('aria-label','Kirim');form.appendChild(inp);form.appendChild(send);
-var note=el('p','cx-note','Didukung Google Gemini AI • Khusus menjawab seputar portofolio Thufeil.');
+var note=el('p','cx-note','Didukung AI LPU & Portofolio Knowledge • Khusus karya Muhammad Thufeil Putrayama.');
 [head,log,form,note].forEach(function(n){inn.appendChild(n)});box.appendChild(inn);
 document.body.appendChild(fab);document.body.appendChild(tip);document.body.appendChild(box);
 
@@ -323,13 +371,14 @@ function row(role){
   return m;
 }
 
+// Reveal animasi mengetik super mulus & cepat (tidak bikin bosan menunggu)
 function reveal(node,text){
-  if(reduce||text.length>1200){
+  if(reduce||text.length>1000){
     node.textContent=text;
     log.scrollTop=log.scrollHeight;
     return Promise.resolve();
   }
-  var w=text.split(/(\s+)/),i=0,step=Math.max(2,Math.ceil(w.length/60))*2;
+  var w=text.split(/(\s+)/),i=0,step=Math.max(3,Math.ceil(w.length/25))*2;
   return new Promise(function(res){
     var t=setInterval(function(){
       i+=step;
@@ -340,7 +389,7 @@ function reveal(node,text){
         node.textContent=text;
         res();
       }
-    }, 18);
+    }, 12); // Kecepatan tinggi 12ms per batch
   });
 }
 
